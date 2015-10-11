@@ -1,0 +1,46 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.3.0'
+        classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.12.0'
+        classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
+        classpath 'com.novoda:gradle-android-command-plugin:1.4.0'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.6'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+void bumpVersionCodeInFile(File file) {
+    def text = file.text
+    def matcher = (text =~ /versionCode ([0-9]+)/)
+    if (matcher.size() != 1 || !matcher.hasGroup()) {
+        throw new GradleException("Could not find versionCode in app/build.gradle")
+    }
+    def String versionCodeStr = matcher[0][1]
+    def versionCode = Integer.valueOf(versionCodeStr)
+    def newVersionCode = versionCode + 1
+    def newContent = matcher.replaceFirst("versionCode " + newVersionCode)
+    file.write(newContent)
+}
+
+task(bumpVersionCode) << {
+    def appGradleFile = file('app/build.gradle')
+    if (appGradleFile.canRead()) {
+        bumpVersionCodeInFile(appGradleFile)
+    } else {
+        throw new GradleException("Could not read app/build.gradle");
+    }
+
+    def wearGradleFile = file('wear/build.gradle')
+    if (wearGradleFile.canRead()) {
+        bumpVersionCodeInFile(wearGradleFile)
+    }
+    // No exception here since projects are not required to have a wearable app
+}

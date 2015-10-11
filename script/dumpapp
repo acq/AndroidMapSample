@@ -1,0 +1,236 @@
+#!/usr/bin/env ruby
+
+require 'socket'
+require 'net/http'
+require 'cgi'
+
+def stetho_open device = nil, process = nil
+    adb = _connect_to_device device
+
+    socket_name = nil
+    if process
+        socket_name = _format_process_as_stetho_socket process
+    else
+        socket_name = _find_only_stetho_socket device
+    end
+
+    adb.select_service "localabstract:#{socket_name}"
+    adb.sock
+rescue SelectServiceError => e
+    raise HumanReadableError.new "Failure to target process #{process}: #{e.reason} (is it running?)"
+end
+
+def _find_only_stetho_socket device
+    adb = _connect_to_device device
+    
+    adb.select_service "shell:cat /proc/net/unix"
+    last_stetho_socket_name = nil
+    process_names = []
+    adb.sock.each_line do |line|
+        row = line.rstrip.split ' '
+        if row.length < 8
+            next
+        end
+        socket_name = row[7]
+        if not socket_name.start_with? '@stetho_'
+            next
+        end
+        if row[3].to_i(16) != 0x10000 or row[5].to_i != 1
+            return nil
+        end
+        last_stetho_socket_name = socket_name[1..-1]
+        process_names << _parse_process_from_stetho_socket(socket_name)
+    end
+    if process_names.length > 1
+        process_text = ([""] + process_names).join "\n\t"
+        raise HumanReadableError.new "Multiple stetho-enabled processes available:#{process_text}\nUse -p <process> to select one"
+    elsif last_stetho_socket_name == nil
+        raise HumanReadableError.new "No stetho-enabled processes running"
+    else
+        return last_stetho_socket_name
+    end
+ensure
+    adb.sock.close
+end
+
+def _connect_to_device device = nil
+    adb = AdbSmartSocketClient.new
+    adb.connect
+    
+    if device == nil
+        adb.select_service "host:transport-any"
+    else
+        adb.select_service "host:transport:#{device}"
+    end
+    adb
+rescue SelectServiceError => e
+    raise HumanReadableError.new "Failure to target device #{device}: #{e.reason}"
+end
+
+def _parse_process_from_stetho_socket socket_name
+    m = /^\@stetho_(.+)_devtools_remote$/.match socket_name
+    if m == nil
+        raise Exception.new "Unexpected Stetho socket formatting: #{socket_name}"
+    end
+    m[1]
+end
+
+def _format_process_as_stetho_socket process
+    "stetho_#{process}_devtools_remote"
+end
+
+class AdbSmartSocketClient
+
+    attr_reader :sock
+
+    def connect port = 5037
+        @sock = TCPSocket.new '127.0.0.1', port
+    end
+
+    def select_service service
+        message = "%04x%s" % [service.length, service]
+        @sock.sendmsg message.encode 'ascii'
+        status = _read_exactly 4
+        if status == "OKAY"
+            # All good
+        elsif status == "FAIL"
+            reason_len = _read_exactly(4).to_i 16
+            reason = _read_exactly reason_len
+            raise SelectServiceError.new reason
+        else
+            raise Exception.new "Unrecognized status=#{status}"
+        end
+    end
+
+    def _read_exactly num_bytes
+        buf = ''
+        while buf.length < num_bytes
+            buf += (@sock.recv num_bytes)
+        end
+        buf
+    end
+end
+
+class SelectServiceError < Exception
+
+    attr_reader :reason
+
+    def initialize reason
+        @reason = reason
+    end
+
+    def to_s
+        @reason.to_s
+    end
+end
+
+class HumanReadableError < Exception
+
+    def initialize reason
+        @reason = reason
+    end
+
+    def to_s
+        @reason
+    end
+end
+
+def read_frames conn
+    while true
+        code = read_input conn, 1, 'code'
+        n = read_input(conn, 4, 'int4').unpack 'N'
+        n = n[0]
+
+        if code == '1'
+            if n > 0
+                print read_input(conn, n, 'stdout blob')
+            end
+        elsif code == '2'
+            if n > 0
+                STDERR.print read_input(conn, n, 'stderr blob')
+            end
+        elsif code == 'x'
+            exit
+        else
+            if raise_on_eof
+                raise IOError.new("Unexpected header #{code}")
+            end
+            break
+        end
+    end
+end
+
+def read_input conn, n, tag
+    data = conn.read n
+    if not data or data.length != n
+        raise IOError.new("Unexpected end of stream while reading #{tag}.")
+    end
+    data
+end
+
+class HTTPConnectionOverADB < Net::HTTP
+
+    def initialize device, process
+        super 'localhost', 5037
+        @_device = device
+        @_process = process
+    end
+
+    def connect
+        @socket = Net::BufferedIO.new stetho_open @_device, @_process
+    end
+end
+
+
+
+
+process = nil
+args = ARGV
+if ARGV.length > 0 and (ARGV[0] == "-p" or ARGV[0] == "--process")
+    if ARGV.length < 2
+        STDERR.puts "Missing <process>"
+        exit
+    end
+    process = ARGV[1]
+    args = ARGV[2..-1]
+end
+device = ENV["ANDROID_SERIAL"]
+
+begin
+    conn = HTTPConnectionOverADB.new device, process
+    query_params = args.map { |arg| 'argv=' + CGI::escape(arg) }
+    args = query_params.join '&'
+    url = "/dumpapp?#{args}"
+
+    http_method = nil
+    if not STDOUT.isatty
+        http_method = Net::HTTP::Post.new url, STDIN.read()
+    else
+        http_method = Net::HTTP::Get.new url
+    end
+    conn.request(http_method) do |reply|
+        if reply.code.to_i != 200
+            raise Exception.new "Unexpected HTTP reply from Stetho: #{reply.status}"
+        end
+        read_frames StringIO.new reply.body
+    end
+rescue HumanReadableError => e
+    STDERR.puts e
+    exit false
+rescue Errno::EPIPE => e
+    STDERR.puts "broken pipe"
+    exit
+rescue Interrupt => e
+    exit false
+end
+
+
+
+
+
+
+
+
+
+
+
