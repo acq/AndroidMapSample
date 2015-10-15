@@ -6,14 +6,17 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.airbnb.android.airmapview.AirMapView;
 import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.applidium.paris.R;
+import com.applidium.paris.adapter.ArrayAdapter;
 import com.applidium.paris.model.Museum;
 import com.raizlabs.android.dbflow.sql.language.Select;
+
+import java.util.ArrayList;
 
 public class MuseumDetailActivity extends AppCompatActivity {
     private static final String MUSEUM_ID_KEY = "museumId";
@@ -48,28 +51,41 @@ public class MuseumDetailActivity extends AppCompatActivity {
         mapView.initialize(getSupportFragmentManager());
         listView.addHeaderView(headerView);
 
-        listView.setAdapter(new MuseumDetailAdapter());
+        listView.setAdapter(new MuseumDetailAdapter(mMuseum));
     }
 
-    private class MuseumDetailAdapter extends BaseAdapter {
-        @Override
-        public int getCount() {
-            return 0;
-        }
+    private class MuseumDetailAdapter extends ArrayAdapter<Detail> {
 
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
+        public MuseumDetailAdapter(Museum museum) {
+            super(new ArrayList<Detail>());
+            elements.add(new Detail("Name", museum.getName()));
+            elements.add(new Detail("Address", museum.getAddress()));
+            elements.add(new Detail("Opening hours", museum.getOpeningHours()));
+            elements.add(new Detail("Closed days", museum.getClosedDays()));
+            elements.add(new Detail("Web site", museum.getWebsite()));
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, parent, false);
+            }
+
+            Detail detail = getItem(position);
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText(detail.title);
+            ((TextView) convertView.findViewById(android.R.id.text2)).setText(detail.value);
+
+            return convertView;
+        }
+    }
+
+    private class Detail {
+        String title;
+        String value;
+
+        public Detail(String title, String value) {
+            this.title = title;
+            this.value = value;
         }
     }
 }

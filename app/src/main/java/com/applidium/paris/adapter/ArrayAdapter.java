@@ -6,7 +6,7 @@ import java.util.List;
 
 public abstract class ArrayAdapter<T> extends BaseAdapter {
 
-    List<T> elements;
+    protected List<T> elements;
 
     public ArrayAdapter(List<T> elements) {
         this.elements = elements;
