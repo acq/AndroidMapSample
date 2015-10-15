@@ -1,31 +1,63 @@
 package com.applidium.paris.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import com.airbnb.android.airmapview.AirMapView;
-import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.applidium.paris.R;
-import com.google.android.gms.maps.model.LatLng;
+import com.applidium.paris.adapter.ArrayAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    private AirMapView mMapView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.list);
 
-        mMapView = (AirMapView) findViewById(R.id.map);
-        mMapView.setOnMapInitializedListener(new OnMapInitializedListener() {
-            @Override
-            public void onMapInitialized() {
-                mMapView.setCenter(new LatLng(48.8567, 2.3508));
-                mMapView.setZoom(12);
-            }
-        });
-        mMapView.initialize(getSupportFragmentManager());
+        List<Feature> features = new ArrayList<>();
+        features.add(new Feature("Museums", MuseumsActivity.makeIntent(this)));
+
+        ListView listView = (ListView) findViewById(android.R.id.list);
+        FeatureArrayAdapter adapter = new FeatureArrayAdapter(features);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(adapter);
     }
 
+    static class Feature {
+        String title;
+        Intent intent;
+
+        public Feature(String title, Intent intent) {
+            this.title = title;
+            this.intent = intent;
+        }
+    }
+
+    private class FeatureArrayAdapter extends ArrayAdapter<Feature> implements AdapterView.OnItemClickListener {
+        public FeatureArrayAdapter(List<Feature> features) {
+            super(features);
+        }
+
+        @Override
+        public View getView(int row, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_1, parent, false);
+            }
+            ((TextView)convertView.findViewById(android.R.id.text1)).setText(getItem(row).title);
+            return convertView;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            startActivity(getItem(position).intent);
+        }
+    }
 }
