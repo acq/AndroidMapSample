@@ -2,6 +2,10 @@ package com.applidium.paris.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.airbnb.android.airmapview.NativeGoogleMapFragment;
 import com.applidium.paris.model.Sector;
@@ -33,6 +37,31 @@ public class SectorsActivity extends MapListActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public SectorsAdapter getAdapter() {
+        return new SectorsAdapter();
+    }
+
+    private class SectorsAdapter extends MapListAdapter<Sector> {
+        public SectorsAdapter() {
+            super(new SectorProvider().getSectors());
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_1, parent, false);
+            }
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText(getItem(position).getName());
+            return convertView;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
         }
     }
 }

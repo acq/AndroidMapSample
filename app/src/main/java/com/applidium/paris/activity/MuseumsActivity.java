@@ -2,6 +2,10 @@ package com.applidium.paris.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
@@ -45,6 +49,33 @@ public class MuseumsActivity extends MapListActivity {
             museumMarkers.put(marker.getTitle(), museum);
 
             mMapFragment.getMapView().addMarker(marker);
+        }
+    }
+
+    @Override
+    public MuseumsAdapter getAdapter() {
+        return new MuseumsAdapter();
+    }
+
+    private class MuseumsAdapter extends MapListAdapter<Museum> {
+        public MuseumsAdapter() {
+            super(new MuseumProvider().getMuseums());
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_1, parent, false);
+            }
+
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText(getItem(position).getName());
+
+            return convertView;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            startActivity(MuseumDetailActivity.makeIntent(MuseumsActivity.this, getItem(position).getId()));
         }
     }
 }
