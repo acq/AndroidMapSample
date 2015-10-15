@@ -64,7 +64,7 @@ public class MuseumProvider {
 
         Museum toMuseum() {
             Museum museum = new Museum();
-            museum.id = this.recordid;
+            museum.recordId = this.recordid;
             museum.name = this.fields.nom_du_musee;
             museum.address = this.fields.adr;
             museum.openingHours = this.fields.periode_ouverture;
@@ -79,7 +79,7 @@ public class MuseumProvider {
                 museum.latitude = this.fields.coordonnees_[0];
                 museum.longitude = this.fields.coordonnees_[1];
             } else {
-                Timber.e("Null coordinates for : " + museum.name + " (" + museum.id + ")");
+                Timber.e("Null coordinates for : " + museum.name + " (" + museum.recordId + ")");
             }
             museum.lateNightOpenings = this.fields.jours_nocturnes;
             museum.reopening = this.fields.annreouv;

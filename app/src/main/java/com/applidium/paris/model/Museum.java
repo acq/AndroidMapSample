@@ -11,9 +11,11 @@ import java.util.Date;
 
 @Table(databaseName = DatabaseConfig.NAME)
 public class Museum extends BaseModel {
-    @PrimaryKey
+    @PrimaryKey(autoincrement = true)
     @Column
-    String id;
+    long id;
+    @Column
+    String recordId;
     @Column
     String name;
     @Column
@@ -49,8 +51,12 @@ public class Museum extends BaseModel {
     @Column
     String source;
 
-    public String getId() {
+    public long getId() {
         return id;
+    }
+
+    public String getRecordId() {
+        return recordId;
     }
 
     public String getName() {
