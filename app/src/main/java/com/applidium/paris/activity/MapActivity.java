@@ -1,6 +1,7 @@
 package com.applidium.paris.activity;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.v7.app.AppCompatActivity;
 
 import com.airbnb.android.airmapview.AirMapView;
@@ -10,7 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 public abstract class MapActivity extends AppCompatActivity {
 
-    private AirMapView mMapView;
+    protected AirMapView mMapView;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,11 +20,16 @@ public abstract class MapActivity extends AppCompatActivity {
         mMapView = (AirMapView) findViewById(R.id.map);
         mMapView.setOnMapInitializedListener(new OnMapInitializedListener() {
             @Override public void onMapInitialized() {
-                mMapView.setCenter(new LatLng(48.8567, 2.3508));
-                mMapView.setZoom(12);
+                onMapReady();
             }
         });
         mMapView.initialize(getSupportFragmentManager());
+    }
+
+    @CallSuper
+    protected void onMapReady() {
+        mMapView.setCenter(new LatLng(48.8567, 2.3508));
+        mMapView.setZoom(12);
     }
 
 }
