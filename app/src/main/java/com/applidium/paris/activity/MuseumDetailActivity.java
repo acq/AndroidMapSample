@@ -30,12 +30,13 @@ public class MuseumDetailActivity extends AppCompatActivity {
 
         mMuseum = new Select().from(Museum.class).byIds(getIntent().getLongExtra(MUSEUM_ID_KEY, 0L)).querySingle();
         setTitle(mMuseum.getName());
-        
+
         mMapView = (AirMapView) findViewById(R.id.map);
         mMapView.setOnMapInitializedListener(new OnMapInitializedListener() {
             @Override
             public void onMapInitialized() {
                 mMapView.setCenterZoom(mMuseum.getCoordinates(), 15);
+                mMapView.addMarker(mMuseum.getMarker());
             }
         });
         mMapView.initialize(getSupportFragmentManager());

@@ -1,5 +1,6 @@
 package com.applidium.paris.model;
 
+import com.airbnb.android.airmapview.AirMapMarker;
 import com.applidium.paris.db.DatabaseConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -109,5 +110,14 @@ public class Museum extends BaseModel {
 
     public String getSource() {
         return source;
+    }
+
+    public AirMapMarker<Museum> getMarker() {
+        AirMapMarker.Builder<Museum> builder = new AirMapMarker.Builder<Museum>();
+        builder.object(this);
+        builder.title(getName());
+        builder.position(getCoordinates());
+        builder.id(getId());
+        return builder.build();
     }
 }

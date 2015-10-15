@@ -45,13 +45,7 @@ public class MuseumsActivity extends MapActivity {
         List<Museum> museums = new MuseumProvider().getMuseums();
         museumMarkers = new HashMap<>(museums.size());
         for (Museum museum : museums) {
-            AirMapMarker.Builder<Museum> builder = new AirMapMarker.Builder<Museum>();
-            builder.object(museum);
-            builder.title(museum.getName());
-            builder.position(museum.getCoordinates());
-            builder.id(museum.getId());
-            AirMapMarker<Museum> marker = builder.build();
-
+            AirMapMarker<Museum> marker = museum.getMarker();
             museumMarkers.put(marker.getTitle(), museum);
 
             mMapView.addMarker(marker);
