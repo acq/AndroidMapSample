@@ -8,12 +8,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.airbnb.android.airmapview.AirMapView;
+import com.airbnb.android.airmapview.listeners.OnMapInitializedListener;
 import com.applidium.paris.R;
 import com.google.android.gms.maps.model.LatLng;
 
 public class MapFragment extends Fragment {
 
+    private OnMapReadyListener mOnMapReadyListener;
     protected AirMapView mMapView;
+
+    public interface OnMapReadyListener {
+        void onMapReady();
+    }
+
+    public void setOnMapReadyListener(OnMapReadyListener listener) {
+        mOnMapReadyListener = listener;
+    }
 
     @Nullable
     @Override
@@ -21,7 +31,15 @@ public class MapFragment extends Fragment {
         View view = inflater.inflate(R.layout.activity_main, container, false);
 
         mMapView = (AirMapView) view.findViewById(R.id.map);
-        mMapView.initialize(getFragmentManager());
+        mMapView.setOnMapInitializedListener(new OnMapInitializedListener() {
+            @Override
+            public void onMapInitialized() {
+                if (mOnMapReadyListener != null) {
+                    mOnMapReadyListener.onMapReady();
+                }
+            }
+        });
+        mMapView.initialize(getChildFragmentManager());
 
         return view;
     }

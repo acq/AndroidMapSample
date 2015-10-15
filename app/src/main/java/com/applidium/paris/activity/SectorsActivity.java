@@ -14,13 +14,13 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class SectorsActivity extends MapActivity {
+public class SectorsActivity extends MapListActivity {
     public static Intent makeIntent(Context context) {
         return new Intent(context, SectorsActivity.class);
     }
 
     @Override
-    protected void onMapReady() {
+    public void onMapReady() {
         super.onMapReady();
 
         List<Sector> sectors = new SectorProvider().getSectors();

@@ -2,7 +2,6 @@ package com.applidium.paris.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
 import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
@@ -15,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MuseumsActivity extends MapActivity {
+public class MuseumsActivity extends MapListActivity {
 
     private Map<String, Museum> museumMarkers = Collections.emptyMap();
 
@@ -24,8 +23,8 @@ public class MuseumsActivity extends MapActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onMapReady() {
+        super.onMapReady();
 
         mMapFragment.getMapView().setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
             @Override
@@ -38,11 +37,7 @@ public class MuseumsActivity extends MapActivity {
                 startActivity(MuseumDetailActivity.makeIntent(MuseumsActivity.this, museumMarkers.get(marker.getTitle()).getId()));
             }
         });
-    }
 
-    @Override
-    protected void onMapReady() {
-        super.onMapReady();
         List<Museum> museums = new MuseumProvider().getMuseums();
         museumMarkers = new HashMap<>(museums.size());
         for (Museum museum : museums) {
