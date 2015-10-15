@@ -15,6 +15,7 @@ dependencies {
     compile 'com.jakewharton.timber:timber:3.0.1'
     debugCompile 'com.facebook.stetho:stetho:1.1.1'
     compile project(':external:airmapview')
+    compile 'com.google.maps.android:android-maps-utils:0.4'
 }
 
 android {
