@@ -28,8 +28,7 @@ public abstract class MapActivity extends AppCompatActivity {
 
     @CallSuper
     protected void onMapReady() {
-        mMapView.setCenter(new LatLng(48.8567, 2.3508));
-        mMapView.setZoom(12);
+        mMapView.setCenterZoom(new LatLng(48.8567, 2.3508), 12);
     }
 
 }
