@@ -26,7 +26,8 @@ public class MuseumsActivity extends MapActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMapView.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+
+        mMapFragment.getMapView().setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(long id) {
                 startActivity(MuseumDetailActivity.makeIntent(MuseumsActivity.this, id));
@@ -48,7 +49,7 @@ public class MuseumsActivity extends MapActivity {
             AirMapMarker<Museum> marker = museum.getMarker();
             museumMarkers.put(marker.getTitle(), museum);
 
-            mMapView.addMarker(marker);
+            mMapFragment.getMapView().addMarker(marker);
         }
     }
 }

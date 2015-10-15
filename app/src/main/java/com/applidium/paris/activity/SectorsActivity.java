@@ -24,7 +24,7 @@ public class SectorsActivity extends MapActivity {
         super.onMapReady();
 
         List<Sector> sectors = new SectorProvider().getSectors();
-        GoogleMap map = ((NativeGoogleMapFragment)mMapView.getMapInterface()).getGoogleMap();
+        GoogleMap map = ((NativeGoogleMapFragment) mMapFragment.getMapView().getMapInterface()).getGoogleMap();
         for (Sector sector : sectors) {
             try {
                 GeoJsonLayer layer = new GeoJsonLayer(map, new JSONObject(sector.getGeoJson()));
