@@ -2,6 +2,7 @@ package com.applidium.paris.activity;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -24,6 +25,9 @@ public abstract class MapListActivity extends AppCompatActivity implements MapFr
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(new MapListAdapter(getSupportFragmentManager()));
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @CallSuper
