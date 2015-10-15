@@ -59,7 +59,7 @@ public class MuseumDetailActivity extends AppCompatActivity {
         public MuseumDetailAdapter(Museum museum) {
             super(new ArrayList<Detail>());
             elements.add(new Detail("Name", museum.getName()));
-            elements.add(new Detail("Address", museum.getAddress()));
+            elements.add(new Detail("Address", String.format("%s, %s %s", museum.getAddress(), museum.getPostalCode(), museum.getCity())));
             elements.add(new Detail("Opening hours", museum.getOpeningHours()));
             elements.add(new Detail("Closed days", museum.getClosedDays()));
             elements.add(new Detail("Web site", museum.getWebsite()));
