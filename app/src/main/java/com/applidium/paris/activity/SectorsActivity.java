@@ -28,6 +28,7 @@ public class SectorsActivity extends MapActivity {
         for (Sector sector : sectors) {
             try {
                 GeoJsonLayer layer = new GeoJsonLayer(map, new JSONObject(sector.getGeoJson()));
+                layer.getDefaultPolygonStyle().setFillColor(0x203F00FF);
                 layer.addLayerToMap();
             } catch (JSONException e) {
                 e.printStackTrace();
