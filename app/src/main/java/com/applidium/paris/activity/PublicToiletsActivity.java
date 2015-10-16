@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.airbnb.android.airmapview.AirMapMarker;
+import com.airbnb.android.airmapview.NativeGoogleMapFragment;
 import com.applidium.paris.model.PublicToilet;
 import com.applidium.paris.model.PublicToiletProvider;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PublicToiletsActivity extends MapListActivity {
@@ -26,10 +30,15 @@ public class PublicToiletsActivity extends MapListActivity {
         super.onMapReady();
 
         List<PublicToilet> toilets = new PublicToiletProvider().getPublicToilets();
+        List<LatLng> coordinates = new ArrayList<>(toilets.size());
         for (PublicToilet toilet : toilets) {
-            AirMapMarker<PublicToilet> marker = new AirMapMarker.Builder<PublicToilet>().position(toilet.getPosition()).build();
-            mMapFragment.getMapView().addMarker(marker);
+            coordinates.add(toilet.getPosition());
+            //AirMapMarker<PublicToilet> marker = new AirMapMarker.Builder<PublicToilet>().position(toilet.getPosition()).build();
+            //mMapFragment.getMapView().addMarker(marker);
         }
+        HeatmapTileProvider provider = new HeatmapTileProvider.Builder().data(coordinates).build();
+        GoogleMap map = ((NativeGoogleMapFragment) mMapFragment.getMapView().getMapInterface()).getGoogleMap();
+        map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
     }
 
     @Override
