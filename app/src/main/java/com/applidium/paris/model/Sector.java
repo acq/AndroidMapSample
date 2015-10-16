@@ -1,11 +1,14 @@
 package com.applidium.paris.model;
 
 import com.applidium.paris.db.DatabaseConfig;
+import com.applidium.paris.util.MapperUtil;
+import com.google.android.gms.maps.model.LatLng;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import java.io.IOException;
 import java.util.Date;
 
 @Table(databaseName = DatabaseConfig.NAME)
@@ -13,31 +16,33 @@ public class Sector extends BaseModel {
 
     @PrimaryKey
     @Column
-    public long sequentialId;
+    long sequentialId;
     @Column
-    public String recordId;
+    String recordId;
     @Column
-    public int    number;
+    int     number;
     @Column
-    public long   inseeNumber;
+    long    inseeNumber;
     @Column
-    public String name;
+    String  name;
     @Column
-    public Date   updatedAt;
+    Date    updatedAt;
     @Column
-    public String source;
+    String  source;
     @Column
-    public int    arrondissement;
+    int     arrondissement;
     @Column
-    public long   arrondissementId;
+    long    arrondissementId;
     @Column
-    public double perimeter;
+    double  perimeter;
     @Column
-    public double length;
+    double  length;
     @Column
-    public double surface;
+    double  surface;
     @Column
-    public String geoJson;
+    private String  geoJson;
+    GeoJson geoJsonRepresentation;
+
 
     public long getSequentialId() {
         return sequentialId;
@@ -89,5 +94,39 @@ public class Sector extends BaseModel {
 
     public String getGeoJson() {
         return geoJson;
+    }
+
+    public void setGeoJson(String geoJson) {
+        this.geoJson = geoJson;
+        try {
+            geoJsonRepresentation = MapperUtil.sharedMapper().readValue(geoJson, GeoJson.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean contains(LatLng latLng) {
+        for (int polygonIndex = 0; polygonIndex < geoJsonRepresentation.coordinates.length; polygonIndex++) {
+            if (insidePolygon(geoJsonRepresentation.coordinates[polygonIndex], latLng.longitude, latLng.latitude)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // via http://stackoverflow.com/a/2922778
+    static boolean insidePolygon(double[][] vertices, double x, double y) {
+        int i, j;
+        boolean c = false;
+        for (i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
+            double vix = vertices[i][0];
+            double viy = vertices[i][1];
+            double vjx = vertices[j][0];
+            double vjy = vertices[j][1];
+            if (((viy > y) != (vjy > y)) && (x < (vjx - vix) * (y - viy) / (vjy - viy) + vix)) {
+                c = !c;
+            }
+        }
+        return c;
     }
 }

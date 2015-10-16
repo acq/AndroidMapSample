@@ -76,7 +76,7 @@ public class SectorProvider {
             sector.perimeter = fields.perimetre;
             sector.length = fields.longueur;
             sector.surface = fields.surface;
-            sector.geoJson = fields.geom;
+            sector.setGeoJson(fields.geom);
             sector.updatedAt = record_timestamp;
             sector.source = datasetid;
             return sector;
