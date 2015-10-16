@@ -13,7 +13,9 @@ import com.applidium.paris.R;
 import com.applidium.paris.model.Museum;
 import com.applidium.paris.model.MuseumProvider;
 import com.applidium.paris.view.DirectionView;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,6 +25,7 @@ import java.util.Map;
 public class MuseumsActivity extends MapListActivity {
 
     private Map<String, Museum> museumMarkers = Collections.emptyMap();
+    private MuseumsAdapter mAdapter;
 
     public static Intent makeIntent(Context context) {
         return new Intent(context, MuseumsActivity.class);
@@ -56,7 +59,10 @@ public class MuseumsActivity extends MapListActivity {
 
     @Override
     public MuseumsAdapter getAdapter() {
-        return new MuseumsAdapter();
+        if (mAdapter == null) {
+            mAdapter = new MuseumsAdapter();
+        }
+        return mAdapter;
     }
 
     private class MuseumsAdapter extends MapListAdapter<Museum> {
@@ -70,8 +76,16 @@ public class MuseumsActivity extends MapListActivity {
                 convertView = getLayoutInflater().inflate(R.layout.direction_row, parent, false);
             }
 
-            ((TextView) convertView.findViewById(android.R.id.text1)).setText(getItem(position).getName());
-            ((DirectionView) convertView.findViewById(R.id.directionView)).setAngle(position * Math.PI / 4);
+            Museum museum = getItem(position);
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText(museum.getName());
+
+            DirectionView directionView = (DirectionView) convertView.findViewById(R.id.directionView);
+            if (mLastLocation != null) {
+                double heading = SphericalUtil.computeHeading(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), museum.getCoordinates());
+                directionView.setHeading(heading / 180 * Math.PI);
+            } else {
+                directionView.setHeading(null);
+            }
 
             return convertView;
         }
