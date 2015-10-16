@@ -25,8 +25,10 @@ public class TheatersActivity extends MapListActivity {
         super.onMapReady();
         List<Theater> theaters = new TheaterProvider().getTheaters();
         for (Theater theater : theaters) {
-            AirMapMarker<Theater> marker = new AirMapMarker.Builder<Theater>().position(theater.getPosition()).title(theater.getName()).build();
-            mMapFragment.getMapView().addMarker(marker);
+            if (theater.getPosition() != null) {
+                AirMapMarker<Theater> marker = new AirMapMarker.Builder<Theater>().position(theater.getPosition()).title(theater.getName()).build();
+                mMapFragment.getMapView().addMarker(marker);
+            }
         }
     }
 

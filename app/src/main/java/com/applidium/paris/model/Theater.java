@@ -87,6 +87,9 @@ public class Theater extends BaseModel {
     }
 
     public LatLng getPosition() {
+        if (latitude == 0 || longitude == 0) {
+            return null;
+        }
         return new LatLng(latitude, longitude);
     }
 }

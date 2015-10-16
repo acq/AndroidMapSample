@@ -101,6 +101,9 @@ public class Museum extends BaseModel {
     }
 
     public LatLng getCoordinates() {
+        if (latitude == 0 || longitude == 0) {
+            return null;
+        }
         return new LatLng(latitude, longitude);
     }
 

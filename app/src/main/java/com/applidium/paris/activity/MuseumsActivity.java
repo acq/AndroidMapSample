@@ -45,10 +45,11 @@ public class MuseumsActivity extends MapListActivity {
         List<Museum> museums = new MuseumProvider().getMuseums();
         museumMarkers = new HashMap<>(museums.size());
         for (Museum museum : museums) {
-            AirMapMarker<Museum> marker = museum.getMarker();
-            museumMarkers.put(marker.getTitle(), museum);
-
-            mMapFragment.getMapView().addMarker(marker);
+            if (museum.getCoordinates() != null) {
+                AirMapMarker<Museum> marker = museum.getMarker();
+                museumMarkers.put(marker.getTitle(), museum);
+                mMapFragment.getMapView().addMarker(marker);
+            }
         }
     }
 

@@ -139,9 +139,9 @@ public abstract class MapListActivity extends AppCompatActivity implements MapFr
 
             TextView distanceView = (TextView) convertView.findViewById(R.id.distanceText);
             DirectionView directionView = (DirectionView) convertView.findViewById(R.id.directionView);
-            if (mLastLocation != null) {
-                LatLng userLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                 LatLng itemLocation = getLocation(position);
+            if (mLastLocation != null && itemLocation != null) {
+                LatLng userLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                 double heading = SphericalUtil.computeHeading(userLocation, itemLocation);
                 directionView.setHeading(heading / 180 * Math.PI);
                 distanceView.setText(TextUtil.humanReadableDistance(SphericalUtil.computeDistanceBetween(userLocation, itemLocation)));
