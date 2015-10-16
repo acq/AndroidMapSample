@@ -20,9 +20,8 @@ public class SectorProvider {
     public List<Sector> getSectors() {
         List<Sector> sectors = new Select().from(Sector.class).queryList();
         if (sectors.size() == 0) {
-            List<JsonSectorWrapper> wrappers;
             try {
-                wrappers = MapperUtil.sharedMapper().readValue(App.getContext().getAssets().open("data/quartier_paris.json"), new TypeReference<List<JsonSectorWrapper>>() {
+                List<JsonSectorWrapper> wrappers = MapperUtil.sharedMapper().readValue(App.getContext().getAssets().open("data/quartier_paris.json"), new TypeReference<List<JsonSectorWrapper>>() {
                 });
                 sectors = new ArrayList<>(wrappers.size());
                 for (JsonSectorWrapper wrapper : wrappers) {

@@ -12,7 +12,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
-import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +50,7 @@ public class PublicToiletsActivity extends MapListActivity {
 
     private class PublicToiletsAdapter extends MapListAdapter<PublicToilet> {
         public PublicToiletsAdapter() {
-            super(new Select().from(PublicToilet.class).queryList());
+            super(new PublicToiletProvider().getPublicToilets());
         }
 
         @Override

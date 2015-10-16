@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         List<Feature> features = new ArrayList<>();
         features.add(new Feature("Museums", MuseumsActivity.makeIntent(this)));
         features.add(new Feature("Sectors", SectorsActivity.makeIntent(this)));
+        features.add(new Feature("Theaters", TheatersActivity.makeIntent(this)));
         features.add(new Feature("Public toilets", PublicToiletsActivity.makeIntent(this)));
 
         ListView listView = (ListView) findViewById(android.R.id.list);
