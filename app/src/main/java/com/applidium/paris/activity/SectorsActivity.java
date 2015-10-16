@@ -52,9 +52,12 @@ public class SectorsActivity extends MapListActivity {
                 for (Sector sector : mSectors) {
                     if (sector.contains(latLng)) {
                         if (mSelectionMarker != null) {
+                            if (sector.getName().equals(mSelectionMarker.getTitle())) {
+                                return;
+                            }
                             mMapFragment.getMapView().getMapInterface().removeMarker(mSelectionMarker);
                         }
-                        mSelectionMarker = new AirMapMarker.Builder<>().title(sector.getName()).position(latLng).build();
+                        mSelectionMarker = new AirMapMarker.Builder<>().title(sector.getName()).position(sector.getCenter()).build();
                         mMapFragment.getMapView().addMarker(mSelectionMarker);
                     }
                 }

@@ -16,31 +16,35 @@ public class Sector extends BaseModel {
 
     @PrimaryKey
     @Column
-    long sequentialId;
+    long   sequentialId;
     @Column
     String recordId;
     @Column
-    int     number;
+    int    number;
     @Column
-    long    inseeNumber;
+    long   inseeNumber;
     @Column
-    String  name;
+    String name;
     @Column
-    Date    updatedAt;
+    Date   updatedAt;
     @Column
-    String  source;
+    String source;
     @Column
-    int     arrondissement;
+    int    arrondissement;
     @Column
-    long    arrondissementId;
+    long   arrondissementId;
     @Column
-    double  perimeter;
+    double perimeter;
     @Column
-    double  length;
+    double length;
     @Column
-    double  surface;
+    double surface;
     @Column
-    private String  geoJson;
+    private String geoJson;
+    @Column
+    double centerLatitude;
+    @Column
+    double centerLongitude;
     GeoJson geoJsonRepresentation;
 
 
@@ -128,5 +132,9 @@ public class Sector extends BaseModel {
             }
         }
         return c;
+    }
+
+    public LatLng getCenter() {
+        return new LatLng(centerLatitude, centerLongitude);
     }
 }
