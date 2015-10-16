@@ -28,6 +28,7 @@ public class DirectionView extends View {
         } else {
             this.heading = null;
         }
+        invalidate();
     }
 
     private final Paint mPaint;
