@@ -1,12 +1,10 @@
 package com.applidium.paris.model;
 
 import com.applidium.paris.App;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.applidium.paris.util.MapperUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raizlabs.android.dbflow.runtime.TransactionManager;
 import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
 import com.raizlabs.android.dbflow.runtime.transaction.process.SaveModelTransaction;
@@ -22,9 +20,9 @@ public class SectorProvider {
     public List<Sector> getSectors() {
         List<Sector> sectors = new Select().from(Sector.class).queryList();
         if (sectors.size() == 0) {
-            List<JsonSectorWrapper> wrappers = null;
+            List<JsonSectorWrapper> wrappers;
             try {
-                wrappers = new ObjectMapper().setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY).readValue(App.getContext().getAssets().open("data/quartier_paris.json"), new TypeReference<List<JsonSectorWrapper>>() {
+                wrappers = MapperUtil.sharedMapper().readValue(App.getContext().getAssets().open("data/quartier_paris.json"), new TypeReference<List<JsonSectorWrapper>>() {
                 });
                 sectors = new ArrayList<>(wrappers.size());
                 for (JsonSectorWrapper wrapper : wrappers) {
