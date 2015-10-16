@@ -12,6 +12,7 @@ import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
 import com.applidium.paris.R;
 import com.applidium.paris.model.Museum;
 import com.applidium.paris.model.MuseumProvider;
+import com.applidium.paris.util.TextUtil;
 import com.applidium.paris.view.DirectionView;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -79,12 +80,17 @@ public class MuseumsActivity extends MapListActivity {
             Museum museum = getItem(position);
             ((TextView) convertView.findViewById(android.R.id.text1)).setText(museum.getName());
 
+            TextView distanceView = (TextView) convertView.findViewById(R.id.distanceText);
             DirectionView directionView = (DirectionView) convertView.findViewById(R.id.directionView);
             if (mLastLocation != null) {
-                double heading = SphericalUtil.computeHeading(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), museum.getCoordinates());
+                LatLng userLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                LatLng museumLocation = museum.getCoordinates();
+                double heading = SphericalUtil.computeHeading(userLocation, museumLocation);
                 directionView.setHeading(heading / 180 * Math.PI);
+                distanceView.setText(TextUtil.humanReadableDistance(SphericalUtil.computeDistanceBetween(userLocation, museumLocation)));
             } else {
                 directionView.setHeading(null);
+                distanceView.setText(null);
             }
 
             return convertView;
