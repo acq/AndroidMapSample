@@ -9,8 +9,10 @@ import android.widget.TextView;
 
 import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
+import com.applidium.paris.R;
 import com.applidium.paris.model.Museum;
 import com.applidium.paris.model.MuseumProvider;
+import com.applidium.paris.view.DirectionView;
 import com.google.android.gms.maps.model.Marker;
 
 import java.util.Collections;
@@ -65,10 +67,11 @@ public class MuseumsActivity extends MapListActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_1, parent, false);
+                convertView = getLayoutInflater().inflate(R.layout.direction_row, parent, false);
             }
 
             ((TextView) convertView.findViewById(android.R.id.text1)).setText(getItem(position).getName());
+            ((DirectionView) convertView.findViewById(R.id.directionView)).setAngle(position * Math.PI / 4);
 
             return convertView;
         }
