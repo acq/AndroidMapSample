@@ -13,55 +13,51 @@ import java.io.IOException;
 import java.util.Date;
 
 @Table(databaseName = DatabaseConfig.NAME)
-public class Sector extends BaseModel {
-
-    @PrimaryKey
-    @Column
-    long   sequentialId;
+public class Arrondissement extends BaseModel {
     @Column
     String recordId;
     @Column
+    @PrimaryKey
+    long   sequentialId;
+    @Column
     int    number;
     @Column
-    long   inseeNumber;
+    int    inseeNumber;
     @Column
     String name;
     @Column
-    Date   updatedAt;
+    String officialName;
     @Column
     String source;
     @Column
-    int    arrondissement;
+    Date   updatedAt;
     @Column
-    long   arrondissementId;
+    double latitude;
     @Column
-    double perimeter;
+    double longitude;
+    @Column
+    private String geoJson;
     @Column
     double length;
     @Column
     double surface;
     @Column
-    private String geoJson;
-    @Column
-    double centerLatitude;
-    @Column
-    double centerLongitude;
+    double perimeter;
     GeoJson geoJsonRepresentation;
-
-
-    public long getSequentialId() {
-        return sequentialId;
-    }
 
     public String getRecordId() {
         return recordId;
+    }
+
+    public long getSequentialId() {
+        return sequentialId;
     }
 
     public int getNumber() {
         return number;
     }
 
-    public long getInseeNumber() {
+    public int getInseeNumber() {
         return inseeNumber;
     }
 
@@ -69,24 +65,28 @@ public class Sector extends BaseModel {
         return name;
     }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
+    public String getOfficialName() {
+        return officialName;
     }
 
     public String getSource() {
         return source;
     }
 
-    public int getArrondissement() {
-        return arrondissement;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public long getArrondissementId() {
-        return arrondissementId;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public double getPerimeter() {
-        return perimeter;
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public String getGeoJson() {
+        return geoJson;
     }
 
     public double getLength() {
@@ -97,8 +97,8 @@ public class Sector extends BaseModel {
         return surface;
     }
 
-    public String getGeoJson() {
-        return geoJson;
+    public double getPerimeter() {
+        return perimeter;
     }
 
     public void setGeoJson(String geoJson) {
@@ -110,6 +110,13 @@ public class Sector extends BaseModel {
         }
     }
 
+    public LatLng getCenter() {
+        if (latitude == 0 || longitude == 0) {
+            return null;
+        }
+        return new LatLng(latitude, longitude);
+    }
+
     public boolean contains(LatLng latLng) {
         for (int polygonIndex = 0; polygonIndex < geoJsonRepresentation.coordinates.length; polygonIndex++) {
             if (PolygonUtil.insidePolygon(geoJsonRepresentation.coordinates[polygonIndex], latLng.longitude, latLng.latitude)) {
@@ -117,9 +124,5 @@ public class Sector extends BaseModel {
             }
         }
         return false;
-    }
-
-    public LatLng getCenter() {
-        return new LatLng(centerLatitude, centerLongitude);
     }
 }

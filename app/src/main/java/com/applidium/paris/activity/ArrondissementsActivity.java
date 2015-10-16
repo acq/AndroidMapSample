@@ -9,8 +9,8 @@ import android.widget.AdapterView;
 import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.NativeGoogleMapFragment;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
-import com.applidium.paris.model.Sector;
-import com.applidium.paris.model.SectorProvider;
+import com.applidium.paris.model.Arrondissement;
+import com.applidium.paris.model.ArrondissementProvider;
 import com.applidium.paris.util.ColorUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -21,26 +21,34 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class SectorsActivity extends MapListActivity {
+public class ArrondissementsActivity extends MapListActivity {
 
-    private List<Sector> mSectors;
-    private AirMapMarker mSelectionMarker;
-    private SectorsAdapter mAdapter;
+    private ArrondissementsAdapter mAdapter;
+    private List<Arrondissement>   mArrondissements;
+    private AirMapMarker           mSelectionMarker;
 
     public static Intent makeIntent(Context context) {
-        return new Intent(context, SectorsActivity.class);
+        return new Intent(context, ArrondissementsActivity.class);
+    }
+
+    @Override
+    public ArrondissementsAdapter getAdapter() {
+        if (mAdapter == null) {
+            mAdapter = new ArrondissementsAdapter();
+        }
+        return mAdapter;
     }
 
     @Override
     public void onMapReady() {
         super.onMapReady();
 
-        mSectors = new SectorProvider().getSectors();
+        mArrondissements = new ArrondissementProvider().getArrondissements();
         GoogleMap map = ((NativeGoogleMapFragment) mMapFragment.getMapView().getMapInterface()).getGoogleMap();
-        for (Sector sector : mSectors) {
+        for (Arrondissement arrondissement : mArrondissements) {
             try {
-                GeoJsonLayer layer = new GeoJsonLayer(map, new JSONObject(sector.getGeoJson()));
-                int[] color = ColorUtil.largePalette[sector.getArrondissement()];
+                GeoJsonLayer layer = new GeoJsonLayer(map, new JSONObject(arrondissement.getGeoJson()));
+                int[] color = ColorUtil.largePalette[arrondissement.getNumber()];
                 layer.getDefaultPolygonStyle().setFillColor(Color.argb(0x40, color[0], color[1], color[2]));
                 layer.addLayerToMap();
             } catch (JSONException e) {
@@ -51,15 +59,15 @@ public class SectorsActivity extends MapListActivity {
         mMapFragment.getMapView().setOnMapClickListener(new OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                for (Sector sector : mSectors) {
-                    if (sector.contains(latLng)) {
+                for (Arrondissement arrondissement : mArrondissements) {
+                    if (arrondissement.contains(latLng)) {
                         if (mSelectionMarker != null) {
-                            if (sector.getName().equals(mSelectionMarker.getTitle())) {
+                            if (arrondissement.getName().equals(mSelectionMarker.getTitle())) {
                                 return;
                             }
                             mMapFragment.getMapView().getMapInterface().removeMarker(mSelectionMarker);
                         }
-                        mSelectionMarker = new AirMapMarker.Builder<>().title(sector.getName()).position(sector.getCenter()).build();
+                        mSelectionMarker = new AirMapMarker.Builder<>().title(arrondissement.getName()).position(arrondissement.getCenter()).snippet(arrondissement.getOfficialName()).build();
                         mMapFragment.getMapView().addMarker(mSelectionMarker);
                     }
                 }
@@ -67,23 +75,9 @@ public class SectorsActivity extends MapListActivity {
         });
     }
 
-    @Override
-    public SectorsAdapter getAdapter() {
-        if (mAdapter == null) {
-            mAdapter = new SectorsAdapter();
-        }
-        return mAdapter;
-    }
-
-    private class SectorsAdapter extends MapListAdapter<Sector> {
-        public SectorsAdapter() {
-            super(new SectorProvider().getSectors());
-        }
-
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+    private class ArrondissementsAdapter extends MapListAdapter<Arrondissement> {
+        public ArrondissementsAdapter() {
+            super(new ArrondissementProvider().getArrondissements());
         }
 
         @Override
@@ -94,6 +88,11 @@ public class SectorsActivity extends MapListActivity {
         @Override
         public LatLng getLocation(int position) {
             return getItem(position).getCenter();
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
         }
     }
 }

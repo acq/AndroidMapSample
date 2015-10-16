@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         List<Feature> features = new ArrayList<>();
         features.add(new Feature("Museums", MuseumsActivity.makeIntent(this)));
+        features.add(new Feature("Arrondissements", ArrondissementsActivity.makeIntent(this)));
         features.add(new Feature("Sectors", SectorsActivity.makeIntent(this)));
         features.add(new Feature("Theaters", TheatersActivity.makeIntent(this)));
         features.add(new Feature("Schools", SchoolsActivity.makeIntent(this)));
