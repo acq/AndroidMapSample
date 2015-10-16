@@ -16,17 +16,23 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.applidium.paris.R;
 import com.applidium.paris.adapter.ArrayAdapter;
 import com.applidium.paris.fragment.MapFragment;
+import com.applidium.paris.util.TextUtil;
+import com.applidium.paris.view.DirectionView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.List;
 
@@ -116,6 +122,35 @@ public abstract class MapListActivity extends AppCompatActivity implements MapFr
     public abstract class MapListAdapter<T> extends ArrayAdapter<T> implements AdapterView.OnItemClickListener {
         public MapListAdapter(List<T> elements) {
             super(elements);
+        }
+
+        public abstract String getTitle(int position);
+
+        public abstract LatLng getLocation(int position);
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(R.layout.direction_row, parent, false);
+            }
+
+            String title = getTitle(position);
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText(getTitle(position));
+
+            TextView distanceView = (TextView) convertView.findViewById(R.id.distanceText);
+            DirectionView directionView = (DirectionView) convertView.findViewById(R.id.directionView);
+            if (mLastLocation != null) {
+                LatLng userLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                LatLng itemLocation = getLocation(position);
+                double heading = SphericalUtil.computeHeading(userLocation, itemLocation);
+                directionView.setHeading(heading / 180 * Math.PI);
+                distanceView.setText(TextUtil.humanReadableDistance(SphericalUtil.computeDistanceBetween(userLocation, itemLocation)));
+            } else {
+                directionView.setHeading(null);
+                distanceView.setText(null);
+            }
+
+            return convertView;
         }
     }
 

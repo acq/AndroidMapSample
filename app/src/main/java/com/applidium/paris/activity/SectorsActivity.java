@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.TextView;
 
 import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.NativeGoogleMapFragment;
@@ -84,18 +82,20 @@ public class SectorsActivity extends MapListActivity {
             super(new SectorProvider().getSectors());
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(android.R.layout.simple_list_item_1, parent, false);
-            }
-            ((TextView) convertView.findViewById(android.R.id.text1)).setText(getItem(position).getName());
-            return convertView;
-        }
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+        }
+
+        @Override
+        public String getTitle(int position) {
+            return getItem(position).getName();
+        }
+
+        @Override
+        public LatLng getLocation(int position) {
+            return getItem(position).getCenter();
         }
     }
 }
