@@ -90,6 +90,16 @@ public class FoursquareActivity extends MapListActivity {
         }
 
         @Override
+        public int getCount() {
+            return mVenues.size();
+        }
+
+        @Override
+        public Venue getItem(int i) {
+            return mVenues.get(i);
+        }
+
+        @Override
         public String getTitle(int position) {
             return getItem(position).getName();
         }
