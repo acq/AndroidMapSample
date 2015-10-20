@@ -116,7 +116,9 @@ public abstract class MapListActivity extends AppCompatActivity implements MapFr
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        getAdapter().notifyDataSetChanged();
+        if (getAdapter() != null) {
+            getAdapter().notifyDataSetChanged();
+        }
     }
 
     public abstract class MapListAdapter<T> extends ArrayAdapter<T> implements AdapterView.OnItemClickListener {
@@ -190,7 +192,9 @@ public abstract class MapListActivity extends AppCompatActivity implements MapFr
             } else if (position == 1) {
                 mListFragment = new MapListFragment();
                 MapListAdapter adapter = getAdapter();
-                mListFragment.setAdapter(adapter);
+                if (adapter != null) {
+                    mListFragment.setAdapter(adapter);
+                }
                 fragment = mListFragment;
             }
             return fragment;
