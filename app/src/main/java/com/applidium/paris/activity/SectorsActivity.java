@@ -3,8 +3,7 @@ package com.applidium.paris.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.view.View;
-import android.widget.AdapterView;
+import android.os.Bundle;
 
 import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.NativeGoogleMapFragment;
@@ -19,25 +18,28 @@ import com.google.maps.android.geojson.GeoJsonLayer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
+public class SectorsActivity extends MapListActivity<Sector> {
 
-public class SectorsActivity extends MapListActivity {
-
-    private List<Sector> mSectors;
     private AirMapMarker mSelectionMarker;
-    private SectorsAdapter mAdapter;
 
     public static Intent makeIntent(Context context) {
         return new Intent(context, SectorsActivity.class);
     }
 
     @Override
-    public void onMapReady() {
-        super.onMapReady();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setItems(new SectorProvider().getSectors());
+    }
 
-        mSectors = new SectorProvider().getSectors();
+    @Override
+    protected void refreshMapContent() {
+        if (mMapFragment == null || !mMapFragment.getMapView().isInitialized()) {
+            return;
+        }
+
         GoogleMap map = ((NativeGoogleMapFragment) mMapFragment.getMapView().getMapInterface()).getGoogleMap();
-        for (Sector sector : mSectors) {
+        for (Sector sector : items) {
             try {
                 GeoJsonLayer layer = new GeoJsonLayer(map, new JSONObject(sector.getGeoJson()));
                 int[] color = ColorUtil.largePalette[sector.getArrondissement()];
@@ -51,7 +53,7 @@ public class SectorsActivity extends MapListActivity {
         mMapFragment.getMapView().setOnMapClickListener(new OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                for (Sector sector : mSectors) {
+                for (Sector sector : items) {
                     if (sector.contains(latLng)) {
                         if (mSelectionMarker != null) {
                             if (sector.getName().equals(mSelectionMarker.getTitle())) {
@@ -59,41 +61,13 @@ public class SectorsActivity extends MapListActivity {
                             }
                             mMapFragment.getMapView().getMapInterface().removeMarker(mSelectionMarker);
                         }
+                        markers.clear();
                         mSelectionMarker = new AirMapMarker.Builder<>().title(sector.getName()).position(sector.getCenter()).build();
                         mMapFragment.getMapView().addMarker(mSelectionMarker);
+                        markers.put(sector.getName(), sector);
                     }
                 }
             }
         });
-    }
-
-    @Override
-    public SectorsAdapter getAdapter() {
-        if (mAdapter == null) {
-            mAdapter = new SectorsAdapter();
-        }
-        return mAdapter;
-    }
-
-    private class SectorsAdapter extends MapListAdapter<Sector> {
-        public SectorsAdapter() {
-            super(new SectorProvider().getSectors());
-        }
-
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        }
-
-        @Override
-        public String getTitle(int position) {
-            return getItem(position).getName();
-        }
-
-        @Override
-        public LatLng getLocation(int position) {
-            return getItem(position).getCenter();
-        }
     }
 }

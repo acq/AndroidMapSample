@@ -1,5 +1,6 @@
 package com.applidium.paris.model;
 
+import com.applidium.paris.activity.MapListActivity;
 import com.applidium.paris.db.DatabaseConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -8,9 +9,11 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Table(databaseName = DatabaseConfig.NAME)
-public class PublicToilet extends BaseModel {
+public class PublicToilet extends BaseModel implements MapListActivity.MapListItem {
 
     @Column
     @PrimaryKey
@@ -58,5 +61,13 @@ public class PublicToilet extends BaseModel {
 
     public LatLng getPosition() {
         return new LatLng(latitude, longitude);
+    }
+
+    public String getName() {
+        return getInfo();
+    }
+
+    public Map<String, String> getDetails() {
+        return new HashMap<>();
     }
 }

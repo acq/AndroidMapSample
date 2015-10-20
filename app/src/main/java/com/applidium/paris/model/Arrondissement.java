@@ -1,5 +1,6 @@
 package com.applidium.paris.model;
 
+import com.applidium.paris.activity.MapListActivity;
 import com.applidium.paris.db.DatabaseConfig;
 import com.applidium.paris.util.MapperUtil;
 import com.applidium.paris.util.PolygonUtil;
@@ -11,9 +12,11 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Table(databaseName = DatabaseConfig.NAME)
-public class Arrondissement extends BaseModel {
+public class Arrondissement extends BaseModel implements MapListActivity.MapListItem {
     @Column
     String recordId;
     @Column
@@ -117,6 +120,11 @@ public class Arrondissement extends BaseModel {
         return new LatLng(latitude, longitude);
     }
 
+    @Override
+    public LatLng getPosition() {
+        return getCenter();
+    }
+
     public boolean contains(LatLng latLng) {
         for (int polygonIndex = 0; polygonIndex < geoJsonRepresentation.coordinates.length; polygonIndex++) {
             if (PolygonUtil.insidePolygon(geoJsonRepresentation.coordinates[polygonIndex], latLng.longitude, latLng.latitude)) {
@@ -124,5 +132,12 @@ public class Arrondissement extends BaseModel {
             }
         }
         return false;
+    }
+
+    @Override
+    public Map<String, String> getDetails() {
+        Map<String, String> map = new HashMap<>();
+        map.put("Official name", officialName);
+        return map;
     }
 }

@@ -18,11 +18,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.airbnb.android.airmapview.AirMapMarker;
+import com.airbnb.android.airmapview.listeners.OnInfoWindowClickListener;
 import com.applidium.paris.R;
-import com.applidium.paris.adapter.ArrayAdapter;
 import com.applidium.paris.fragment.MapFragment;
 import com.applidium.paris.util.TextUtil;
 import com.applidium.paris.view.DirectionView;
@@ -32,16 +34,32 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.SphericalUtil;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public abstract class MapListActivity extends AppCompatActivity implements MapFragment.OnMapReadyListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public abstract class MapListActivity<T extends MapListActivity.MapListItem> extends AppCompatActivity implements MapFragment.OnMapReadyListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+
+    public interface MapListItem {
+        String getName();
+
+        LatLng getPosition();
+
+        Map<String, String> getDetails();
+    }
 
     protected MapFragment     mMapFragment;
     protected MapListFragment mListFragment;
     private   GoogleApiClient mGoogleApiClient;
     Location mLastLocation;
+
+    List<T>        items   = Collections.emptyList();
+    Map<String, T> markers = new HashMap<>();
+    private MapListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +92,44 @@ public abstract class MapListActivity extends AppCompatActivity implements MapFr
         mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
     }
 
+    public void setItems(List<T> items) {
+        this.items = items;
+        refreshMapContent();
+        getAdapter().notifyDataSetChanged();
+    }
+
+    protected void refreshMapContent() {
+        if (mMapFragment == null || !mMapFragment.getMapView().isInitialized()) {
+            return;
+        }
+        mMapFragment.getMapView().clearMarkers();
+        markers = new HashMap<>(items.size());
+        for (T item : items) {
+            if (item.getPosition() != null) {
+                AirMapMarker marker = new AirMapMarker.Builder<>().position(item.getPosition()).title(item.getName()).build();
+                markers.put(marker.getTitle(), item);
+                mMapFragment.getMapView().addMarker(marker);
+            }
+        }
+    }
+
     @CallSuper
     public void onMapReady() {
         mMapFragment.centerOnParis();
         mMapFragment.getMapView().setMyLocationEnabled(true);
+
+        refreshMapContent();
+        mMapFragment.getMapView().setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(long id) {
+                // TODO
+            }
+
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                showDetail(markers.get(marker.getTitle()));
+            }
+        });
     }
 
     @Override
@@ -121,14 +173,26 @@ public abstract class MapListActivity extends AppCompatActivity implements MapFr
         }
     }
 
-    public abstract class MapListAdapter<T> extends ArrayAdapter<T> implements AdapterView.OnItemClickListener {
-        public MapListAdapter(List<T> elements) {
-            super(elements);
+    public void showDetail(MapListItem item) {
+        startActivity(DetailActivity.makeIntent(this, item.getName(), item.getPosition(), item.getDetails()));
+    }
+
+    public class MapListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+
+        @Override
+        public int getCount() {
+            return items.size();
         }
 
-        public abstract String getTitle(int position);
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
 
-        public abstract LatLng getLocation(int position);
+        @Override
+        public MapListItem getItem(int position) {
+            return items.get(position);
+        }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -136,12 +200,11 @@ public abstract class MapListActivity extends AppCompatActivity implements MapFr
                 convertView = getLayoutInflater().inflate(R.layout.direction_row, parent, false);
             }
 
-            String title = getTitle(position);
-            ((TextView) convertView.findViewById(android.R.id.text1)).setText(getTitle(position));
+            ((TextView) convertView.findViewById(android.R.id.text1)).setText(getItem(position).getName());
 
             TextView distanceView = (TextView) convertView.findViewById(R.id.distanceText);
             DirectionView directionView = (DirectionView) convertView.findViewById(R.id.directionView);
-                LatLng itemLocation = getLocation(position);
+            LatLng itemLocation = getItem(position).getPosition();
             if (mLastLocation != null && itemLocation != null) {
                 LatLng userLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
                 double heading = SphericalUtil.computeHeading(userLocation, itemLocation);
@@ -154,11 +217,21 @@ public abstract class MapListActivity extends AppCompatActivity implements MapFr
 
             return convertView;
         }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            showDetail(getItem(position));
+        }
     }
 
-    public abstract MapListAdapter getAdapter();
+    public MapListAdapter getAdapter() {
+        if (mAdapter == null) {
+            mAdapter = new MapListAdapter();
+        }
+        return mAdapter;
+    }
 
-    public static class MapListFragment extends ListFragment {
+    public class MapListFragment extends ListFragment {
         MapListAdapter mAdapter;
 
         public void setAdapter(MapListAdapter adapter) {

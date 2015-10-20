@@ -1,12 +1,15 @@
 package com.applidium.paris.model;
 
+import com.applidium.paris.activity.MapListActivity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @JsonIgnoreProperties({"deals", "gift_certificates"})
-public class Business {
+public class Business implements MapListActivity.MapListItem {
     String         id;
     boolean        isClaimed;
     boolean        isClosed;
@@ -37,6 +40,17 @@ public class Business {
 
     public LatLng getPosition() {
         return new LatLng(location.coordinate.latitude, location.coordinate.longitude);
+    }
+
+    @Override
+    public Map<String, String> getDetails() {
+        Map<String, String> map = new HashMap<>();
+        map.put("Url", mobileUrl != null ? mobileUrl : url);
+        map.put("Phone", phone);
+        map.put("Rating", String.valueOf(rating));
+        map.put("Reservation", reservationUrl);
+        map.put("Address", location.address.toString());
+        return map;
     }
 
     private static class Location {

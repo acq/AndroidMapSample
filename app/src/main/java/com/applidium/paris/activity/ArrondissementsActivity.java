@@ -3,8 +3,7 @@ package com.applidium.paris.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.view.View;
-import android.widget.AdapterView;
+import android.os.Bundle;
 
 import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.NativeGoogleMapFragment;
@@ -19,12 +18,8 @@ import com.google.maps.android.geojson.GeoJsonLayer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
+public class ArrondissementsActivity extends MapListActivity<Arrondissement> {
 
-public class ArrondissementsActivity extends MapListActivity {
-
-    private ArrondissementsAdapter mAdapter;
-    private List<Arrondissement>   mArrondissements;
     private AirMapMarker           mSelectionMarker;
 
     public static Intent makeIntent(Context context) {
@@ -32,20 +27,20 @@ public class ArrondissementsActivity extends MapListActivity {
     }
 
     @Override
-    public ArrondissementsAdapter getAdapter() {
-        if (mAdapter == null) {
-            mAdapter = new ArrondissementsAdapter();
-        }
-        return mAdapter;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setItems(new ArrondissementProvider().getArrondissements());
     }
 
     @Override
-    public void onMapReady() {
-        super.onMapReady();
+    protected void refreshMapContent() {
+        if (mMapFragment == null || !mMapFragment.getMapView().isInitialized()) {
+            return;
+        }
 
-        mArrondissements = new ArrondissementProvider().getArrondissements();
         GoogleMap map = ((NativeGoogleMapFragment) mMapFragment.getMapView().getMapInterface()).getGoogleMap();
-        for (Arrondissement arrondissement : mArrondissements) {
+        map.clear();
+        for (Arrondissement arrondissement : items) {
             try {
                 GeoJsonLayer layer = new GeoJsonLayer(map, new JSONObject(arrondissement.getGeoJson()));
                 int[] color = ColorUtil.largePalette[arrondissement.getNumber()];
@@ -59,7 +54,7 @@ public class ArrondissementsActivity extends MapListActivity {
         mMapFragment.getMapView().setOnMapClickListener(new OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                for (Arrondissement arrondissement : mArrondissements) {
+                for (Arrondissement arrondissement : items) {
                     if (arrondissement.contains(latLng)) {
                         if (mSelectionMarker != null) {
                             if (arrondissement.getName().equals(mSelectionMarker.getTitle())) {
@@ -67,32 +62,13 @@ public class ArrondissementsActivity extends MapListActivity {
                             }
                             mMapFragment.getMapView().getMapInterface().removeMarker(mSelectionMarker);
                         }
+                        markers.clear();
                         mSelectionMarker = new AirMapMarker.Builder<>().title(arrondissement.getName()).position(arrondissement.getCenter()).snippet(arrondissement.getOfficialName()).build();
                         mMapFragment.getMapView().addMarker(mSelectionMarker);
+                        markers.put(arrondissement.getName(), arrondissement);
                     }
                 }
             }
         });
-    }
-
-    private class ArrondissementsAdapter extends MapListAdapter<Arrondissement> {
-        public ArrondissementsAdapter() {
-            super(new ArrondissementProvider().getArrondissements());
-        }
-
-        @Override
-        public String getTitle(int position) {
-            return getItem(position).getName();
-        }
-
-        @Override
-        public LatLng getLocation(int position) {
-            return getItem(position).getCenter();
-        }
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-        }
     }
 }

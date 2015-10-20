@@ -1,5 +1,6 @@
 package com.applidium.paris.model;
 
+import com.applidium.paris.activity.MapListActivity;
 import com.applidium.paris.db.DatabaseConfig;
 import com.applidium.paris.util.MapperUtil;
 import com.applidium.paris.util.PolygonUtil;
@@ -11,9 +12,11 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Table(databaseName = DatabaseConfig.NAME)
-public class Sector extends BaseModel {
+public class Sector extends BaseModel implements MapListActivity.MapListItem {
 
     @PrimaryKey
     @Column
@@ -121,5 +124,18 @@ public class Sector extends BaseModel {
 
     public LatLng getCenter() {
         return new LatLng(centerLatitude, centerLongitude);
+    }
+
+    @Override
+    public LatLng getPosition() {
+        return getCenter();
+    }
+
+    @Override
+    public Map<String, String> getDetails() {
+        Map<String,String> map = new HashMap<>();
+        map.put("Surface", String.valueOf(surface));
+        map.put("Perimeter", String.valueOf(perimeter));
+        return map;
     }
 }

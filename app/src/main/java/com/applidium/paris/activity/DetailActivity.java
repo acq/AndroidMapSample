@@ -106,9 +106,9 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Detail detail = getItem(position);
+            Detail detail = getItem((int) id);
             String value = detail.value;
-            if (detail.value.startsWith("wwww")) {
+            if (detail.value.startsWith("www")) {
                 value = "http://" + value;
             }
             if (value.startsWith("http")) {

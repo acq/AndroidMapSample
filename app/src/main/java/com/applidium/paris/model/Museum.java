@@ -1,6 +1,7 @@
 package com.applidium.paris.model;
 
 import com.airbnb.android.airmapview.AirMapMarker;
+import com.applidium.paris.activity.MapListActivity;
 import com.applidium.paris.db.DatabaseConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Table(databaseName = DatabaseConfig.NAME)
-public class Museum extends BaseModel {
+public class Museum extends BaseModel implements MapListActivity.MapListItem {
     @PrimaryKey(autoincrement = true)
     @Column
     long id;
@@ -102,14 +103,16 @@ public class Museum extends BaseModel {
         return department;
     }
 
-    public LatLng getCoordinates() {
+    @Override
+    public LatLng getPosition() {
         if (latitude == 0 || longitude == 0) {
             return null;
         }
         return new LatLng(latitude, longitude);
     }
 
-    public Map<String, String> getDetailsBundle() {
+    @Override
+    public Map<String, String> getDetails() {
         Map<String, String> map = new HashMap<>();
         map.put("Name", getName());
         map.put("Address", String.format("%s, %s %s", getAddress(), getPostalCode(), getCity()));
@@ -131,7 +134,7 @@ public class Museum extends BaseModel {
         AirMapMarker.Builder<Museum> builder = new AirMapMarker.Builder<Museum>();
         builder.object(this);
         builder.title(getName());
-        builder.position(getCoordinates());
+        builder.position(getPosition());
         builder.id(getId());
         return builder.build();
     }
