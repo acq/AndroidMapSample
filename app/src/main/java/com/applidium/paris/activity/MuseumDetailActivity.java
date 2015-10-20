@@ -2,10 +2,14 @@ package com.applidium.paris.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -21,7 +25,10 @@ import java.util.ArrayList;
 public class MuseumDetailActivity extends AppCompatActivity {
     private static final String MUSEUM_ID_KEY = "museumId";
 
-    private Museum     mMuseum;
+    private static final String EXTRA_CUSTOM_TABS_SESSION       = "android.support.customtabs.extra.SESSION";
+    private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR = "android.support.customtabs.extra.TOOLBAR_COLOR";
+
+    private Museum mMuseum;
 
     public static Intent makeIntent(Context context, long museumId) {
         Intent intent = new Intent(context, MuseumDetailActivity.class);
@@ -52,6 +59,19 @@ public class MuseumDetailActivity extends AppCompatActivity {
         listView.addHeaderView(headerView);
 
         listView.setAdapter(new MuseumDetailAdapter(mMuseum));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://" + mMuseum.getWebsite()));
+                Bundle extras = new Bundle();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    extras.putBinder(EXTRA_CUSTOM_TABS_SESSION, null);
+                }
+                extras.putInt(EXTRA_CUSTOM_TABS_TOOLBAR_COLOR, ContextCompat.getColor(MuseumDetailActivity.this, R.color.primary));
+                intent.putExtras(extras);
+                startActivity(intent);
+            }
+        });
     }
 
     private class MuseumDetailAdapter extends ArrayAdapter<Detail> {
