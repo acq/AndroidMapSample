@@ -2,6 +2,7 @@ package com.applidium.paris.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -34,7 +35,11 @@ public class FoursquareActivity extends MapListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ApiManager.foursquare().search("48.8567,2.3508", new Callback<FoursquareResponse<Venue.Wrapper>>() {
+        refreshData("48.8567,2.3508");
+    }
+
+    private void refreshData(String coordinates) {
+        ApiManager.foursquare().search(coordinates, new Callback<FoursquareResponse<Venue.Wrapper>>() {
             @Override
             public void success(FoursquareResponse<Venue.Wrapper> wrapperFoursquareResponse, Response response) {
                 mVenues = wrapperFoursquareResponse.getResponse().getVenues();
@@ -47,6 +52,12 @@ public class FoursquareActivity extends MapListActivity {
                 Timber.e(error.getCause(), "Error");
             }
         });
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        super.onLocationChanged(location);
+        refreshData(String.format("%f,%f", location.getLatitude(), location.getLongitude()));
     }
 
     @Override
