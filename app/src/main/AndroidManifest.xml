@@ -73,6 +73,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.applidium.paris.activity.MainActivity"/>
         </activity>
+        <activity
+            android:name=".activity.FoursquareActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.applidium.paris.activity.MainActivity"/>
+        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

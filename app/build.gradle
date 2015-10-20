@@ -33,14 +33,16 @@ android {
 
         def Properties props = new Properties()
         props.load(new FileInputStream(new File('secrets.properties')))
-        def googleMapsKey = "\"" + props['GOOGLE_MAPS_KEY'] + "\""
-        resValue "string", "google_maps_key", googleMapsKey
+        resValue "string", "google_maps_key", "\"" + props['GOOGLE_MAPS_KEY'] + "\""
+        buildConfigField "String", "FOURSQUARE_CLIENT_ID", "\"" + props['FOURSQUARE_CLIENT_ID'] + "\""
+        buildConfigField "String", "FOURSQUARE_CLIENT_SECRET", "\"" + props['FOURSQUARE_CLIENT_SECRET'] + "\""
+
+        buildConfigField "String", "FOURSQUARE_ENDPOINT", "\"https://api.foursquare.com/v2\""
     }
 
     productFlavors {
         stubs {
             applicationId "com.applidium.paris.stubs"
-            buildConfigField "String", "ENDPOINT", "\"http://example.com\""
             versionName = android.defaultConfig.versionName + "-stubs"
         }
 

@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         features.add(new Feature("Museums", MuseumsActivity.makeIntent(this)));
         features.add(new Feature("Arrondissements", ArrondissementsActivity.makeIntent(this)));
         features.add(new Feature("Sectors", SectorsActivity.makeIntent(this)));
+        features.add(new Feature("Foursquare", FoursquareActivity.makeIntent(this)));
         features.add(new Feature("Theaters", TheatersActivity.makeIntent(this)));
         features.add(new Feature("Schools", SchoolsActivity.makeIntent(this)));
         features.add(new Feature("Public toilets", PublicToiletsActivity.makeIntent(this)));
