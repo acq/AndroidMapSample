@@ -33,12 +33,12 @@ public class MuseumsActivity extends MapListActivity {
         mMapFragment.getMapView().setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(long id) {
-                startActivity(MuseumDetailActivity.makeIntent(MuseumsActivity.this, id));
+                // TODO
             }
 
             @Override
             public void onInfoWindowClick(Marker marker) {
-                startActivity(MuseumDetailActivity.makeIntent(MuseumsActivity.this, museumMarkers.get(marker.getTitle()).getId()));
+                showDetail(museumMarkers.get(marker.getTitle()));
             }
         });
 
@@ -68,7 +68,7 @@ public class MuseumsActivity extends MapListActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            startActivity(MuseumDetailActivity.makeIntent(MuseumsActivity.this, getItem(position).getId()));
+            showDetail(getItem(position));
         }
 
         @Override
@@ -80,5 +80,9 @@ public class MuseumsActivity extends MapListActivity {
         public LatLng getLocation(int position) {
             return getItem(position).getCoordinates();
         }
+    }
+
+    public void showDetail(Museum museum) {
+        startActivity(DetailActivity.makeIntent(this, museum.getName(), museum.getCoordinates(), museum.getDetailsBundle()));
     }
 }

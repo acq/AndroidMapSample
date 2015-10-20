@@ -9,6 +9,8 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Table(databaseName = DatabaseConfig.NAME)
 public class Museum extends BaseModel {
@@ -105,6 +107,16 @@ public class Museum extends BaseModel {
             return null;
         }
         return new LatLng(latitude, longitude);
+    }
+
+    public Map<String, String> getDetailsBundle() {
+        Map<String, String> map = new HashMap<>();
+        map.put("Name", getName());
+        map.put("Address", String.format("%s, %s %s", getAddress(), getPostalCode(), getCity()));
+        map.put("Opening hours", getOpeningHours());
+        map.put("Closed days", getClosedDays());
+        map.put("Web site", getWebsite());
+        return map;
     }
 
     public Date getUpdatedAt() {
