@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -18,7 +19,9 @@ import com.applidium.paris.model.Address;
 import com.applidium.paris.model.AddressProvider;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AddressesActivity extends AppCompatActivity {
 
@@ -27,8 +30,8 @@ public class AddressesActivity extends AppCompatActivity {
         return new Intent(context, AddressesActivity.class);
     }
 
-    List<Address> searchResults = Collections.emptyList();
-    private BaseAdapter mAdapter = new AddressesAdapter();
+    List<Address>    searchResults = Collections.emptyList();
+    AddressesAdapter mAdapter      = new AddressesAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +59,12 @@ public class AddressesActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
             }
         });
-        ((ListView) findViewById(android.R.id.list)).setAdapter(mAdapter);
+        ListView listView = (ListView) findViewById(android.R.id.list);
+        listView.setAdapter(mAdapter);
+        listView.setOnItemClickListener(mAdapter);
     }
 
-    private class AddressesAdapter extends BaseAdapter {
+    private class AddressesAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
         @Override
         public int getCount() {
             return searchResults.size();
@@ -82,6 +87,14 @@ public class AddressesActivity extends AppCompatActivity {
             }
             ((TextView) convertView.findViewById(android.R.id.text1)).setText(getItem(position).getAddress());
             return convertView;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Address address = getItem(position);
+            Map<String, String> details = new HashMap<>();
+            details.put("Address", address.getAddress());
+            startActivity(DetailActivity.makeIntent(AddressesActivity.this, address.getAddress(), address.getPosition(), details));
         }
     }
 }
