@@ -1,15 +1,25 @@
 package com.applidium.paris.model;
 
 import com.applidium.paris.activity.MapListActivity;
+import com.applidium.paris.db.DatabaseConfig;
+import com.applidium.paris.util.MapperUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.android.gms.maps.model.LatLng;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @JsonIgnoreProperties({"specials", "hereNow"})
-public class Venue implements MapListActivity.MapListItem {
+@Table(databaseName = DatabaseConfig.NAME)
+public class Venue extends BaseModel implements MapListActivity.MapListItem {
     public static class Wrapper {
         List<Venue> venues;
         boolean     confident;
@@ -19,18 +29,46 @@ public class Venue implements MapListActivity.MapListItem {
         }
     }
 
-    String               id;
-    String               name;
-    Map<String, String>  contact;
-    Location             location;
-    List<Category>       categories;
-    boolean              verified;
-    Map<String, Integer> stats;
-    String               url;
-    String               referralId;
-    String               storeId;
-    boolean              allowMenuUrlEdit;
-    Map<String, String>  venuePage;
+    @Column
+    @PrimaryKey
+    String id;
+    @Column
+    String name;
+    Map<String, String> contact; //TODO
+    @Column
+    Location       location;
+    @Column
+    String categories;
+    @Column
+    boolean        verified;
+    Map<String, Integer> stats; //TODO
+    @Column
+    String  url;
+    @Column
+    String  referralId;
+    @Column
+    String  storeId;
+    @Column
+    boolean allowMenuUrlEdit;
+    Map<String, String> venuePage; //TODO
+
+    public void setCategories(List<Category> categories) {
+        try {
+            this.categories = MapperUtil.sharedMapper().writeValueAsString(categories);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Category> getCategories() {
+        try {
+            return MapperUtil.sharedMapper().readValue(categories, new TypeReference<List<Category>>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public String getName() {
         return name;
@@ -47,20 +85,20 @@ public class Venue implements MapListActivity.MapListItem {
 
             map.put("Url", url);
         }
-        map.put("Categories", categories.toString());
+        map.put("Categories", categories);
         if (location.address != null) {
             map.put("Address", location.address);
         }
         return map;
     }
 
-    private static class Category {
-        String              id;
-        String              name;
-        String              pluralName;
-        String              shortName;
+    public static class Category {
+        String id;
+        String name;
+        String pluralName;
+        String shortName;
         Map<String, String> icon;
-        boolean             primary;
+        boolean primary;
 
         @Override
         public String toString() {
@@ -68,7 +106,7 @@ public class Venue implements MapListActivity.MapListItem {
         }
     }
 
-    private static class Location {
+    public static class Location {
         String       address;
         String       crossStreet;
         double       lat;

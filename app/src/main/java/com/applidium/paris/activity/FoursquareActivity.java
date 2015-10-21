@@ -8,6 +8,10 @@ import android.os.Bundle;
 import com.applidium.paris.model.Venue;
 import com.applidium.paris.network.ApiManager;
 import com.applidium.paris.network.model.FoursquareResponse;
+import com.raizlabs.android.dbflow.runtime.TransactionManager;
+import com.raizlabs.android.dbflow.runtime.transaction.process.ProcessModelInfo;
+import com.raizlabs.android.dbflow.runtime.transaction.process.SaveModelTransaction;
+import com.raizlabs.android.dbflow.sql.language.Select;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -31,7 +35,8 @@ public class FoursquareActivity extends MapListActivity<Venue> {
         ApiManager.foursquare().search(coordinates, new Callback<FoursquareResponse<Venue.Wrapper>>() {
             @Override
             public void success(FoursquareResponse<Venue.Wrapper> wrapperFoursquareResponse, Response response) {
-                setItems(wrapperFoursquareResponse.getResponse().getVenues());
+                TransactionManager.getInstance().addTransaction(new SaveModelTransaction<>(ProcessModelInfo.withModels(wrapperFoursquareResponse.getResponse().getVenues())));
+                setItems(new Select().from(Venue.class).queryList());
             }
 
             @Override
