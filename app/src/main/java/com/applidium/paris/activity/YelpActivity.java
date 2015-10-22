@@ -35,6 +35,7 @@ public class YelpActivity extends MapListActivity<Business> {
             @Override
             public void failure(RetrofitError error) {
                 Timber.e(error.getCause(), "error");
+                setItems(new Select().from(Business.class).queryList());
             }
         });
     }

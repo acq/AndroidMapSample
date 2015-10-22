@@ -42,6 +42,7 @@ public class FoursquareActivity extends MapListActivity<Venue> {
             @Override
             public void failure(RetrofitError error) {
                 Timber.e(error.getCause(), "Error");
+                setItems(new Select().from(Venue.class).queryList());
             }
         });
     }
