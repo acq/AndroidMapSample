@@ -39,9 +39,10 @@ public class SectorsActivity extends MapListActivity<Sector> {
         }
 
         GoogleMap map = ((NativeGoogleMapFragment) mMapFragment.getMapView().getMapInterface()).getGoogleMap();
+        map.clear(); //TODO
         for (Sector sector : items) {
             try {
-                GeoJsonLayer layer = new GeoJsonLayer(map, new JSONObject(sector.getGeoJson()));
+                GeoJsonLayer layer = new GeoJsonLayer(mMapFragment.getMapView(), new JSONObject(sector.getGeoJson()));
                 int[] color = ColorUtil.largePalette[sector.getArrondissement()];
                 layer.getDefaultPolygonStyle().setFillColor(Color.argb(0x40, color[0], color[1], color[2]));
                 layer.addLayerToMap();

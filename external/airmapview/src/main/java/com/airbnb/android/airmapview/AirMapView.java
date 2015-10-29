@@ -347,4 +347,12 @@ public class AirMapView extends FrameLayout implements OnCameraChangeListener, O
             onInfoWindowClickListener.onInfoWindowClick(marker);
         }
     }
+
+    public <T> boolean addPolygon(AirMapPolygon<T> polygon) {
+        if (isInitialized()) {
+            mapInterface.addPolygon(polygon);
+            return true;
+        }
+        return false;
+    }
 }

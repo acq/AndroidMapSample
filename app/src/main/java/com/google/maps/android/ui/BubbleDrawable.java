@@ -20,7 +20,7 @@ import android.content.res.Resources;
 import android.graphics.*;
 import android.graphics.drawable.Drawable;
 
-import com.google.maps.android.R;
+import com.applidium.paris.R;
 
 /**
  * Draws a bubble with a shadow, filled with any color.

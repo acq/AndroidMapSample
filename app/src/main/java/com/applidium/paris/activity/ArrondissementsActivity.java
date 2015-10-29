@@ -39,10 +39,10 @@ public class ArrondissementsActivity extends MapListActivity<Arrondissement> {
         }
 
         GoogleMap map = ((NativeGoogleMapFragment) mMapFragment.getMapView().getMapInterface()).getGoogleMap();
-        map.clear();
+        map.clear(); //TODO
         for (Arrondissement arrondissement : items) {
             try {
-                GeoJsonLayer layer = new GeoJsonLayer(map, new JSONObject(arrondissement.getGeoJson()));
+                GeoJsonLayer layer = new GeoJsonLayer(mMapFragment.getMapView(), new JSONObject(arrondissement.getGeoJson()));
                 int[] color = ColorUtil.largePalette[arrondissement.getNumber()];
                 layer.getDefaultPolygonStyle().setFillColor(Color.argb(0x40, color[0], color[1], color[2]));
                 layer.addLayerToMap();

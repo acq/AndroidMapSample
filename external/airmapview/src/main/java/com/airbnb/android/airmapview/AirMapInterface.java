@@ -195,4 +195,6 @@ public interface AirMapInterface {
      * Sets the type of map tiles that should be displayed
      */
     void setMapType(MapType type);
+
+    <T> void addPolygon(AirMapPolygon<T> polygon);
 }

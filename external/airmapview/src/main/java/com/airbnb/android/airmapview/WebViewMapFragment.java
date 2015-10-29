@@ -221,14 +221,14 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     public <T> void addPolyline(AirMapPolyline<T> polyline) {
         try {
             JSONArray array = new JSONArray();
-            for (LatLng point : polyline.getPoints()) {
+            for (LatLng point : polyline.getPolylineOptions().getPoints()) {
                 JSONObject json = new JSONObject();
                 json.put("lat", point.latitude);
                 json.put("lng", point.longitude);
                 array.put(json);
             }
 
-            webView.loadUrl(String.format("javascript:addPolyline(" + array.toString() + ", %1$d, %2$d, %3$d);", polyline.getId(), polyline.getStrokeWidth(), polyline.getStrokeColor()));
+            webView.loadUrl(String.format("javascript:addPolyline(" + array.toString() + ", %1$d, %2$d, %3$d);", polyline.getId(), polyline.getPolylineOptions().getWidth(), polyline.getPolylineOptions().getColor()));
         } catch (JSONException e) {
             Log.e(TAG, "error constructing polyline JSON", e);
         }
@@ -268,6 +268,11 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
     @Override
     public void setCenter(LatLngBounds bounds, int boundsPadding) {
         webView.loadUrl(String.format(Locale.US, "javascript:setBounds(%1$f, %2$f, %3$f, %4$f);", bounds.northeast.latitude, bounds.northeast.longitude, bounds.southwest.latitude, bounds.southwest.longitude));
+    }
+
+    @Override
+    public <T> void addPolygon(AirMapPolygon<T> polygon) {
+        // TODO
     }
 
     private class MapsJavaScriptInterface {
