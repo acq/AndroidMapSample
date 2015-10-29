@@ -30,7 +30,7 @@ void bumpVersionCodeInFile(File file) {
     file.write(newContent)
 }
 
-task(bumpVersionCode) << {
+task('bumpVersionCode') << {
     def appGradleFile = file('app/build.gradle')
     if (appGradleFile.canRead()) {
         bumpVersionCodeInFile(appGradleFile)
