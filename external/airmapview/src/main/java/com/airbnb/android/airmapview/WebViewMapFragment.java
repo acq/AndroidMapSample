@@ -272,7 +272,19 @@ public abstract class WebViewMapFragment extends Fragment implements AirMapInter
 
     @Override
     public <T> void addPolygon(AirMapPolygon<T> polygon) {
-        // TODO
+        try {
+            JSONArray array = new JSONArray();
+            for (LatLng point : polygon.getPolygonOptions().getPoints()) {
+                JSONObject json = new JSONObject();
+                json.put("lat", point.latitude);
+                json.put("lng", point.longitude);
+                array.put(json);
+            }
+
+            webView.loadUrl(String.format("javascript:addPolygon(" + array.toString() + ", %1$d, %2$d, %3$d, %4$d);", polygon.getId(), (int)polygon.getPolygonOptions().getStrokeWidth(), polygon.getPolygonOptions().getStrokeColor(), polygon.getPolygonOptions().getFillColor()));
+        } catch (JSONException e) {
+            Log.e(TAG, "error constructing polyline JSON", e);
+        }
     }
 
     private class MapsJavaScriptInterface {
