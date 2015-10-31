@@ -1,6 +1,7 @@
-package com.applidium.paris.model;
+package com.applidium.paris.db;
 
 import com.applidium.paris.App;
+import com.applidium.paris.model.Theater;
 import com.applidium.paris.util.MapperUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TheaterProvider {
+public class TheaterRepository {
 
     public List<Theater> getTheaters() {
         List<Theater> theaters = new Select().from(Theater.class).queryList();
@@ -35,40 +36,37 @@ public class TheaterProvider {
     }
 
     static class JsonTheater {
-        int    ecrans;
-        String fauteuils;
-        int    ndegauto;
-        int    arrondissement;
-        String art_et_essai;
-        String adresse;
-        String nom_etablissement;
+        int      ecrans;
+        String   fauteuils;
+        int      ndegauto;
+        int      arrondissement;
+        String   art_et_essai;
+        String   adresse;
+        String   nom_etablissement;
         double[] coordonnees;
     }
 
     @JsonIgnoreProperties({"geometry"})
     static class JsonTheaterWrapper {
-        String datasetid;
-        String recordid;
+        String      datasetid;
+        String      recordid;
         JsonTheater fields;
-        Date record_timestamp;
+        Date        record_timestamp;
 
         Theater toTheater() {
-            Theater theater = new Theater();
-            theater.recordId = recordid;
-            theater.autoId = fields.ndegauto;
-            theater.name = fields.nom_etablissement;
-            theater.screens = fields.ecrans;
-            theater.seats = fields.fauteuils;
-            theater.arrondissement = fields.arrondissement;
-            theater.artHouse = "A".equals(fields.art_et_essai);
-            theater.address = fields.adresse;
-            if (fields.coordonnees != null) {
-                theater.latitude = fields.coordonnees[0];
-                theater.longitude = fields.coordonnees[1];
-            }
-            theater.source = datasetid;
-            theater.updatedAt = record_timestamp;
-            return theater;
+            return new Theater(
+                    recordid,
+                    fields.ndegauto,
+                    fields.nom_etablissement,
+                    fields.ecrans,
+                    fields.fauteuils,
+                    fields.arrondissement,
+                    "A".equals(fields.art_et_essai),
+                    fields.adresse,
+                    fields.coordonnees != null ? fields.coordonnees[0] : 0.,
+                    fields.coordonnees != null ? fields.coordonnees[1] : 0,
+                    datasetid,
+                    record_timestamp);
         }
     }
 }

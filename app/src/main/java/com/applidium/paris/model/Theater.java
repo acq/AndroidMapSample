@@ -41,6 +41,24 @@ public class Theater extends BaseModel implements MapListActivity.MapListItem {
     @Column
     Date    updatedAt;
 
+    Theater() {
+    }
+
+    public Theater(String recordId, int autoId, String name, int screens, String seats, int arrondissement, boolean artHouse, String address, double latitude, double longitude, String source, Date updatedAt) {
+        this.recordId = recordId;
+        this.autoId = autoId;
+        this.name = name;
+        this.screens = screens;
+        this.seats = seats;
+        this.arrondissement = arrondissement;
+        this.artHouse = artHouse;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.source = source;
+        this.updatedAt = updatedAt;
+    }
+
     public String getRecordId() {
         return recordId;
     }

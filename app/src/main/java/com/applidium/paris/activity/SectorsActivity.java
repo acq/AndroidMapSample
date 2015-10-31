@@ -9,7 +9,7 @@ import com.airbnb.android.airmapview.AirMapMarker;
 import com.airbnb.android.airmapview.NativeGoogleMapFragment;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.applidium.paris.model.Sector;
-import com.applidium.paris.model.SectorProvider;
+import com.applidium.paris.db.SectorRepository;
 import com.applidium.paris.util.ColorUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -29,7 +29,7 @@ public class SectorsActivity extends MapListActivity<Sector> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setItems(new SectorProvider().getSectors());
+        setItems(new SectorRepository().getSectors());
     }
 
     @Override

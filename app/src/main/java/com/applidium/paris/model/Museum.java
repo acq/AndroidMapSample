@@ -37,10 +37,6 @@ public class Museum extends BaseModel implements MapListActivity.MapListItem {
     @Column
     String closed;
     @Column
-    String reopening;
-    @Column
-    String lateNightOpenings;
-    @Column
     String postalCode;
     @Column
     String department;
@@ -49,11 +45,39 @@ public class Museum extends BaseModel implements MapListActivity.MapListItem {
     @Column
     double longitude;
     @Column
+    String lateNightOpenings;
+    @Column
+    String reopening;
+    @Column
     String annex;
     @Column
     Date   updatedAt;
     @Column
     String source;
+
+    Museum() {
+    }
+
+    public Museum(String recordId, String name, String address, String openingHours, String city, String region, String website, String closedDays, String closed, String postalCode, String department, double latitude, double longitude, String lateNightOpenings, String reopening, String annex, Date updatedAt, String source) {
+        this.recordId = recordId;
+        this.name = name;
+        this.address = address;
+        this.openingHours = openingHours;
+        this.city = city;
+        this.region = region;
+        this.website = website;
+        this.closedDays = closedDays;
+        this.closed = closed;
+        this.postalCode = postalCode;
+        this.department = department;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.lateNightOpenings = lateNightOpenings;
+        this.reopening = reopening;
+        this.annex = annex;
+        this.updatedAt = updatedAt;
+        this.source = source;
+    }
 
     public long getId() {
         return id;

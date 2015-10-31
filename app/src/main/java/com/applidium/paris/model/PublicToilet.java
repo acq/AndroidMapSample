@@ -31,6 +31,19 @@ public class PublicToilet extends BaseModel implements MapListActivity.MapListIt
     @Column
     String source;
 
+    PublicToilet() {
+    }
+
+    public PublicToilet(String recordId, String info, String label, double latitude, double longitude, Date updatedAt, String source) {
+        this.recordId = recordId;
+        this.info = info;
+        this.label = label;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.updatedAt = updatedAt;
+        this.source = source;
+    }
+
     public String getRecordId() {
         return recordId;
     }

@@ -30,10 +30,6 @@ public class Sector extends BaseModel implements MapListActivity.MapListItem {
     @Column
     String name;
     @Column
-    Date   updatedAt;
-    @Column
-    String source;
-    @Column
     int    arrondissement;
     @Column
     long   arrondissementId;
@@ -44,13 +40,42 @@ public class Sector extends BaseModel implements MapListActivity.MapListItem {
     @Column
     double surface;
     @Column
-    private String geoJson;
+    String geoJson;
     @Column
     double centerLatitude;
     @Column
     double centerLongitude;
+    @Column
+    Date   updatedAt;
+    @Column
+    String source;
     GeoJson geoJsonRepresentation;
 
+    Sector() {
+    }
+
+    public Sector(long sequentialId, String recordId, int number, long inseeNumber, String name, int arrondissement, long arrondissementId, double perimeter, double length, double surface, String geoJson, double centerLatitude, double centerLongitude, Date updatedAt, String source) {
+        this.sequentialId = sequentialId;
+        this.recordId = recordId;
+        this.number = number;
+        this.inseeNumber = inseeNumber;
+        this.name = name;
+        this.arrondissement = arrondissement;
+        this.arrondissementId = arrondissementId;
+        this.perimeter = perimeter;
+        this.length = length;
+        this.surface = surface;
+        this.geoJson = geoJson;
+        this.centerLatitude = centerLatitude;
+        this.centerLongitude = centerLongitude;
+        this.updatedAt = updatedAt;
+        this.source = source;
+        try {
+            geoJsonRepresentation = MapperUtil.sharedMapper().readValue(geoJson, GeoJson.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public long getSequentialId() {
         return sequentialId;
@@ -102,15 +127,6 @@ public class Sector extends BaseModel implements MapListActivity.MapListItem {
 
     public String getGeoJson() {
         return geoJson;
-    }
-
-    public void setGeoJson(String geoJson) {
-        this.geoJson = geoJson;
-        try {
-            geoJsonRepresentation = MapperUtil.sharedMapper().readValue(geoJson, GeoJson.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public boolean contains(LatLng latLng) {

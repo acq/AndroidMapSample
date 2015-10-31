@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.applidium.paris.R;
 import com.applidium.paris.model.Address;
-import com.applidium.paris.model.AddressProvider;
+import com.applidium.paris.db.AddressRepository;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -52,7 +52,7 @@ public class AddressesActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > 1) {
-                    searchResults = new AddressProvider().search(s.toString());
+                    searchResults = new AddressRepository().search(s.toString());
                 } else {
                     searchResults = Collections.emptyList();
                 }

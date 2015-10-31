@@ -1,6 +1,7 @@
-package com.applidium.paris.model;
+package com.applidium.paris.db;
 
 import com.applidium.paris.App;
+import com.applidium.paris.model.PublicToilet;
 import com.applidium.paris.util.MapperUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PublicToiletProvider {
+public class PublicToiletRepository {
 
     public List<PublicToilet> getPublicToilets() {
         List<PublicToilet> toilets = new Select().from(PublicToilet.class).queryList();
@@ -49,15 +50,14 @@ public class PublicToiletProvider {
         Date             record_timestamp;
 
         PublicToilet toPublicToilet() {
-            PublicToilet toilet = new PublicToilet();
-            toilet.recordId = recordid;
-            toilet.info = fields.info;
-            toilet.label = fields.libelle;
-            toilet.latitude = fields.geom_x_y[0];
-            toilet.longitude = fields.geom_x_y[1];
-            toilet.updatedAt = record_timestamp;
-            toilet.source = datasetid;
-            return toilet;
+            return new PublicToilet(
+                    recordid,
+                    fields.info,
+                    fields.libelle,
+                    fields.geom_x_y[0],
+                    fields.geom_x_y[1],
+                    record_timestamp,
+                    datasetid);
         }
     }
 

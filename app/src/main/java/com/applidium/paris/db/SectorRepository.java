@@ -1,6 +1,7 @@
-package com.applidium.paris.model;
+package com.applidium.paris.db;
 
 import com.applidium.paris.App;
+import com.applidium.paris.model.Sector;
 import com.applidium.paris.util.MapperUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SectorProvider {
+public class SectorRepository {
 
     public List<Sector> getSectors() {
         List<Sector> sectors = new Select().from(Sector.class).queryList();
@@ -62,23 +63,22 @@ public class SectorProvider {
         Date       record_timestamp;
 
         Sector toSector() {
-            Sector sector = new Sector();
-            sector.recordId = recordid;
-            sector.sequentialId = fields.n_sq_qu;
-            sector.number = fields.c_qu;
-            sector.inseeNumber = fields.c_quinsee;
-            sector.name = fields.l_qu;
-            sector.arrondissement = fields.c_ar;
-            sector.arrondissementId = fields.n_sq_ar;
-            sector.perimeter = fields.perimetre;
-            sector.length = fields.longueur;
-            sector.surface = fields.surface;
-            sector.centerLatitude = fields.geom_x_y[0];
-            sector.centerLongitude = fields.geom_x_y[1];
-            sector.setGeoJson(fields.geom);
-            sector.updatedAt = record_timestamp;
-            sector.source = datasetid;
-            return sector;
+            return new Sector(
+                    fields.n_sq_qu,
+                    recordid,
+                    fields.c_qu,
+                    fields.c_quinsee,
+                    fields.l_qu,
+                    fields.c_ar,
+                    fields.n_sq_ar,
+                    fields.perimetre,
+                    fields.longueur,
+                    fields.surface,
+                    fields.geom,
+                    fields.geom_x_y[0],
+                    fields.geom_x_y[1],
+                    record_timestamp,
+                    datasetid);
         }
     }
 }

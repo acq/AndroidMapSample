@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.airbnb.android.airmapview.NativeGoogleMapFragment;
 import com.applidium.paris.model.PublicToilet;
-import com.applidium.paris.model.PublicToiletProvider;
+import com.applidium.paris.db.PublicToiletRepository;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.TileOverlayOptions;
@@ -24,7 +24,7 @@ public class PublicToiletsActivity extends MapListActivity<PublicToilet> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setItems(new PublicToiletProvider().getPublicToilets());
+        setItems(new PublicToiletRepository().getPublicToilets());
     }
 
     @Override

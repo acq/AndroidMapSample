@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.applidium.paris.model.School;
-import com.applidium.paris.model.SchoolProvider;
+import com.applidium.paris.db.SchoolRepository;
 
 public class SchoolsActivity extends MapListActivity<School> {
 
@@ -16,6 +16,6 @@ public class SchoolsActivity extends MapListActivity<School> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setItems(new SchoolProvider().getSchools());
+        setItems(new SchoolRepository().getSchools());
     }
 }

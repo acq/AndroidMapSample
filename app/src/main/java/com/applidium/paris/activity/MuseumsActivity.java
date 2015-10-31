@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.applidium.paris.model.Museum;
-import com.applidium.paris.model.MuseumProvider;
+import com.applidium.paris.db.MuseumRepository;
 
 public class MuseumsActivity extends MapListActivity<Museum> {
 
@@ -16,7 +16,7 @@ public class MuseumsActivity extends MapListActivity<Museum> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setItems(new MuseumProvider().getMuseums());
+        setItems(new MuseumRepository().getMuseums());
     }
 
 }

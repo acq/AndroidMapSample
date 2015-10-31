@@ -1,6 +1,7 @@
-package com.applidium.paris.model;
+package com.applidium.paris.db;
 
 import com.applidium.paris.App;
+import com.applidium.paris.model.Arrondissement;
 import com.applidium.paris.util.MapperUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ArrondissementProvider {
+public class ArrondissementRepository {
 
     public List<Arrondissement> getArrondissements() {
         List<Arrondissement> arrondissements = new Select().from(Arrondissement.class).queryList();
@@ -62,24 +63,21 @@ public class ArrondissementProvider {
         Date               record_timestamp;
 
         Arrondissement toArrondissement() {
-            Arrondissement arrondissement = new Arrondissement();
-            arrondissement.recordId = recordid;
-            arrondissement.sequentialId = fields.n_sq_ar;
-            arrondissement.number = fields.c_ar;
-            arrondissement.inseeNumber = fields.c_arinsee;
-            arrondissement.name = fields.l_ar;
-            arrondissement.officialName = fields.l_aroff;
-            arrondissement.source = datasetid;
-            arrondissement.updatedAt = record_timestamp;
-            if (fields.geom_x_y != null) {
-                arrondissement.latitude = fields.geom_x_y[0];
-                arrondissement.longitude = fields.geom_x_y[1];
-            }
-            arrondissement.setGeoJson(fields.geom);
-            arrondissement.length = fields.longueur;
-            arrondissement.surface = fields.surface;
-            arrondissement.perimeter = fields.perimetre;
-            return arrondissement;
+            return new Arrondissement(
+                    recordid,
+                    fields.n_sq_ar,
+                    fields.c_ar,
+                    fields.c_arinsee,
+                    fields.l_ar,
+                    fields.l_aroff,
+                    datasetid,
+                    record_timestamp,
+                    fields.geom_x_y[0],
+                    fields.geom_x_y[1],
+                    fields.geom,
+                    fields.longueur,
+                    fields.surface,
+                    fields.perimetre);
         }
     }
 }

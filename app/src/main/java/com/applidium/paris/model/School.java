@@ -38,6 +38,23 @@ public class School extends BaseModel implements MapListActivity.MapListItem {
     @Column
     Date   updatedAt;
 
+    School() {
+    }
+
+    public School(String recordId, String id, String name, String type, String address, double latitude, double longitude, String city, int postalCode, String source, Date updatedAt) {
+        this.recordId = recordId;
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.city = city;
+        this.postalCode = postalCode;
+        this.source = source;
+        this.updatedAt = updatedAt;
+    }
+
     public String getRecordId() {
         return recordId;
     }

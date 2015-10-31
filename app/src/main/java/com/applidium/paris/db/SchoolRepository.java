@@ -1,6 +1,7 @@
-package com.applidium.paris.model;
+package com.applidium.paris.db;
 
 import com.applidium.paris.App;
+import com.applidium.paris.model.School;
 import com.applidium.paris.util.MapperUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class SchoolProvider {
+public class SchoolRepository {
 
     public List<School> getSchools() {
         List<School> schools = new Select().from(School.class).queryList();
@@ -52,21 +53,18 @@ public class SchoolProvider {
         Date       record_timestamp;
 
         School toSchool() {
-            School school = new School();
-            school.recordId = recordid;
-            school.id = fields.n_etablissement;
-            school.name = fields.nom;
-            school.type = fields.type;
-            school.address = fields.adresse;
-            if (fields.adresse_complete != null) {
-                school.latitude = fields.adresse_complete[0];
-                school.longitude = fields.adresse_complete[1];
-            }
-            school.city = fields.ville;
-            school.postalCode = fields.code_postal;
-            school.source = datasetid;
-            school.updatedAt = record_timestamp;
-            return school;
+            return new School(
+                    recordid,
+                    fields.n_etablissement,
+                    fields.nom,
+                    fields.type,
+                    fields.adresse,
+                    fields.adresse_complete != null ? fields.adresse_complete[0] : 0.,
+                    fields.adresse_complete != null ? fields.adresse_complete[1] : 0.,
+                    fields.ville,
+                    fields.code_postal,
+                    datasetid,
+                    record_timestamp);
         }
     }
 }

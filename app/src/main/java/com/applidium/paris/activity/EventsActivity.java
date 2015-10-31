@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.applidium.paris.adapter.ArrayAdapter;
 import com.applidium.paris.model.Event;
-import com.applidium.paris.model.EventProvider;
+import com.applidium.paris.db.EventRepository;
 
 public class EventsActivity extends AppCompatActivity {
 
@@ -30,7 +30,7 @@ public class EventsActivity extends AppCompatActivity {
 
     private class EventsAdapter extends ArrayAdapter<Event> {
         public EventsAdapter() {
-            super(new EventProvider().getEvents());
+            super(new EventRepository().getEvents());
         }
 
         @Override

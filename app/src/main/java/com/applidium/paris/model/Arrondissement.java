@@ -48,6 +48,31 @@ public class Arrondissement extends BaseModel implements MapListActivity.MapList
     double perimeter;
     GeoJson geoJsonRepresentation;
 
+    Arrondissement() {
+    }
+
+    public Arrondissement(String recordId, long sequentialId, int number, int inseeNumber, String name, String officialName, String source, Date updatedAt, double latitude, double longitude, String geoJson, double length, double surface, double perimeter) {
+        this.recordId = recordId;
+        this.sequentialId = sequentialId;
+        this.number = number;
+        this.inseeNumber = inseeNumber;
+        this.name = name;
+        this.officialName = officialName;
+        this.source = source;
+        this.updatedAt = updatedAt;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.geoJson = geoJson;
+        this.length = length;
+        this.surface = surface;
+        this.perimeter = perimeter;
+        try {
+            geoJsonRepresentation = MapperUtil.sharedMapper().readValue(geoJson, GeoJson.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getRecordId() {
         return recordId;
     }

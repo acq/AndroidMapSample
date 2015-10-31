@@ -13,11 +13,21 @@ public class Address extends BaseModel {
     @PrimaryKey
     String recordid;
     @Column
+    String address;
+    @Column
     double latitude;
     @Column
     double longitude;
-    @Column
-    String address;
+
+    Address() {
+    }
+
+    public Address(String recordid, String address, double latitude, double longitude) {
+        this.recordid = recordid;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
 
     public String getAddress() {
         return address;

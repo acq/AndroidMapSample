@@ -6,12 +6,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import com.airbnb.android.airmapview.AirMapMarker;
-import com.airbnb.android.airmapview.NativeGoogleMapFragment;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.applidium.paris.model.Arrondissement;
-import com.applidium.paris.model.ArrondissementProvider;
+import com.applidium.paris.db.ArrondissementRepository;
 import com.applidium.paris.util.ColorUtil;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.geojson.GeoJsonLayer;
 
@@ -29,7 +27,7 @@ public class ArrondissementsActivity extends MapListActivity<Arrondissement> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setItems(new ArrondissementProvider().getArrondissements());
+        setItems(new ArrondissementRepository().getArrondissements());
     }
 
     @Override
