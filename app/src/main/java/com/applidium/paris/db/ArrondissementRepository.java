@@ -26,7 +26,9 @@ public class ArrondissementRepository {
                 });
                 arrondissements = new ArrayList<>(wrappers.size());
                 for (JsonArrondissementWrapper wrapper : wrappers) {
-                    arrondissements.add(wrapper.toArrondissement());
+                    Arrondissement arrondissement = wrapper.toArrondissement();
+                    arrondissement.setWikipediaUrl(arrondissement.getNumber() > 1 ? String.format("https://fr.wikipedia.org/wiki/%de_arrondissement_de_Paris", arrondissement.getNumber()) : "https://fr.wikipedia.org/wiki/1er_arrondissement_de_Paris");
+                    arrondissements.add(arrondissement);
                 }
                 TransactionManager.getInstance().addTransaction(new SaveModelTransaction<>(ProcessModelInfo.withModels(arrondissements)));
             } catch (IOException e) {
