@@ -40,7 +40,7 @@ public class Sector extends BaseModel implements MapListActivity.MapListItem {
     @Column
     double surface;
     @Column
-    String geoJson;
+    private String geoJson;
     @Column
     double centerLatitude;
     @Column
@@ -127,6 +127,15 @@ public class Sector extends BaseModel implements MapListActivity.MapListItem {
 
     public String getGeoJson() {
         return geoJson;
+    }
+
+    public void setGeoJson(String geoJson) {
+        this.geoJson = geoJson;
+        try {
+            geoJsonRepresentation = MapperUtil.sharedMapper().readValue(geoJson, GeoJson.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean contains(LatLng latLng) {
