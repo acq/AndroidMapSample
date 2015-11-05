@@ -11,6 +11,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +47,8 @@ public class Arrondissement extends BaseModel implements MapListActivity.MapList
     double surface;
     @Column
     double perimeter;
+    @Column
+    String wikipediaUrl;
     GeoJson geoJsonRepresentation;
 
     Arrondissement() {
@@ -138,6 +141,14 @@ public class Arrondissement extends BaseModel implements MapListActivity.MapList
         }
     }
 
+    public void setWikipediaUrl(String wikipediaUrl) {
+        this.wikipediaUrl = wikipediaUrl;
+    }
+
+    public String getWikipediaUrl() {
+        return wikipediaUrl;
+    }
+
     public LatLng getCenter() {
         if (latitude == 0 || longitude == 0) {
             return null;
@@ -163,6 +174,9 @@ public class Arrondissement extends BaseModel implements MapListActivity.MapList
     public Map<String, String> getDetails() {
         Map<String, String> map = new HashMap<>();
         map.put("Official name", officialName);
+        map.put("Insee number", String.valueOf(inseeNumber));
+        map.put("Updated at", new SimpleDateFormat().format(updatedAt));
+        map.put("Surface", String.valueOf(surface));
         return map;
     }
 }

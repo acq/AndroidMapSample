@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@JsonIgnoreProperties({"specials", "hereNow"})
+@JsonIgnoreProperties({"specials", "hereNow", "venueChains"})
 @Table(databaseName = DatabaseConfig.NAME)
 public class Venue extends BaseModel implements MapListActivity.MapListItem {
     public static class Wrapper {
@@ -36,11 +36,11 @@ public class Venue extends BaseModel implements MapListActivity.MapListItem {
     String name;
     Map<String, String> contact; //TODO
     @Column
-    Location       location;
+    Location location;
     @Column
-    String categories;
+    String   categories;
     @Column
-    boolean        verified;
+    boolean  verified;
     Map<String, Integer> stats; //TODO
     @Column
     String  url;
@@ -82,10 +82,17 @@ public class Venue extends BaseModel implements MapListActivity.MapListItem {
     public Map<String, String> getDetails() {
         Map<String, String> map = new HashMap<>();
         if (url != null) {
-
             map.put("Url", url);
         }
-        map.put("Categories", categories);
+
+        List<Category> categories = getCategories();
+        StringBuilder sb = new StringBuilder();
+        for (Category category : categories) {
+            sb.append(category.toString()).append("\n");
+        }
+        sb.deleteCharAt(sb.length() - 1);
+        map.put("Categories", sb.toString());
+
         if (location.address != null) {
             map.put("Address", location.address);
         }
@@ -93,16 +100,20 @@ public class Venue extends BaseModel implements MapListActivity.MapListItem {
     }
 
     public static class Category {
-        String id;
-        String name;
-        String pluralName;
-        String shortName;
+        String              id;
+        String              name;
+        String              pluralName;
+        String              shortName;
         Map<String, String> icon;
-        boolean primary;
+        boolean             primary;
 
         @Override
         public String toString() {
-            return name;
+            StringBuilder sb = new StringBuilder();
+            sb.append("Name: " + name).append("\n");
+            sb.append("Short name: " + shortName).append("\n");
+            sb.append("Icon:" + icon.values().iterator().next());
+            return sb.toString();
         }
     }
 
