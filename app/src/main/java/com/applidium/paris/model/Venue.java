@@ -110,9 +110,9 @@ public class Venue extends BaseModel implements MapListActivity.MapListItem {
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append("Name: " + name).append("\n");
-            sb.append("Short name: " + shortName).append("\n");
-            sb.append("Icon:" + icon.values().iterator().next());
+            sb.append("Name: ").append(name).append("\n");
+            sb.append("Short name: ").append(shortName).append("\n");
+            sb.append("Icon:").append(icon.values().iterator().next());
             return sb.toString();
         }
     }
