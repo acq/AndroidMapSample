@@ -6,8 +6,6 @@ import android.content.res.Configuration;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 
-import java.sql.SQLException;
-
 public class App extends Application {
 
     private static Activity mProgressActivity;
