@@ -29,7 +29,6 @@ public class DetailActivity extends AppCompatActivity {
     private static final String TITLE_KEY   = "title";
     private static final String COORDS_KEY = "coords";
     private static final String DETAILS_KEY = "details";
-    private static final String WIKIPEDIA_KEY = "wikipedia";
 
     private static final String EXTRA_CUSTOM_TABS_SESSION       = "android.support.customtabs.extra.SESSION";
     private static final String EXTRA_CUSTOM_TABS_TOOLBAR_COLOR = "android.support.customtabs.extra.TOOLBAR_COLOR";
@@ -44,12 +43,6 @@ public class DetailActivity extends AppCompatActivity {
             bundle.putString(entry.getKey(), entry.getValue());
         }
         intent.putExtra(DETAILS_KEY, bundle);
-        return intent;
-    }
-
-    public static Intent makeIntent(Context context, String title, LatLng coords, Map<String, String> details, String wikipediaUrl) {
-        Intent intent = makeIntent(context, title, coords, details);
-        intent.putExtra(WIKIPEDIA_KEY, wikipediaUrl);
         return intent;
     }
 
@@ -82,24 +75,10 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        boolean superMenu = super.onCreateOptionsMenu(menu);
-        String wikipediaUrl = getIntent().getStringExtra(WIKIPEDIA_KEY);
-        if (wikipediaUrl != null) {
-            getMenuInflater().inflate(R.menu.wikipedia, menu);
-            return true;
-        }
-        return superMenu;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
-        }
-        if (item.getItemId() == R.id.wikipedia) {
-            openUrl(getIntent().getStringExtra(WIKIPEDIA_KEY));
         }
         return super.onOptionsItemSelected(item);
     }

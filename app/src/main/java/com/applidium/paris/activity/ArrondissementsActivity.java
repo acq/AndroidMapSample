@@ -69,9 +69,4 @@ public class ArrondissementsActivity extends MapListActivity<Arrondissement> {
             }
         });
     }
-
-    @Override
-    public void showDetail(MapListItem item) {
-        startActivity(DetailActivity.makeIntent(this, item.getName(), item.getPosition(), item.getDetails(), ((Arrondissement)item).getWikipediaUrl()));
-    }
 }

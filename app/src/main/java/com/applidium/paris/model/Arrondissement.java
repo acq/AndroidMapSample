@@ -48,8 +48,6 @@ public class Arrondissement extends BaseModel implements MapListActivity.MapList
     double surface;
     @Column
     double perimeter;
-    @Column
-    String wikipediaUrl;
     GeoJson geoJsonRepresentation;
 
     Arrondissement() {
@@ -140,14 +138,6 @@ public class Arrondissement extends BaseModel implements MapListActivity.MapList
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setWikipediaUrl(String wikipediaUrl) {
-        this.wikipediaUrl = wikipediaUrl;
-    }
-
-    public String getWikipediaUrl() {
-        return wikipediaUrl;
     }
 
     public LatLng getCenter() {
