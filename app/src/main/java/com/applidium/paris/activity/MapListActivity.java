@@ -1,6 +1,7 @@
 package com.applidium.paris.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -52,14 +54,14 @@ public abstract class MapListActivity<T extends MapListActivity.MapListItem> ext
         Map<String, String> getDetails();
     }
 
-    protected MapFragment     mMapFragment;
-    protected MapListFragment mListFragment;
-    private   GoogleApiClient mGoogleApiClient;
+    protected MapFragment        mMapFragment;
+    protected MapListFragment<T> mListFragment;
+    private   GoogleApiClient    mGoogleApiClient;
     Location mLastLocation;
 
     List<T>        items   = Collections.emptyList();
     Map<String, T> markers = new HashMap<>();
-    private MapListAdapter mAdapter;
+    private MapListAdapter<T> mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +96,8 @@ public abstract class MapListActivity<T extends MapListActivity.MapListItem> ext
 
     public void setItems(List<T> items) {
         this.items = items;
+        getAdapter().setItems(items);
         refreshMapContent();
-        getAdapter().notifyDataSetChanged();
     }
 
     protected void refreshMapContent() {
@@ -169,7 +171,7 @@ public abstract class MapListActivity<T extends MapListActivity.MapListItem> ext
     public void onLocationChanged(Location location) {
         mLastLocation = location;
         if (getAdapter() != null) {
-            getAdapter().notifyDataSetChanged();
+            getAdapter().setLastLocation(mLastLocation);
         }
     }
 
@@ -177,7 +179,24 @@ public abstract class MapListActivity<T extends MapListActivity.MapListItem> ext
         startActivity(DetailActivity.makeIntent(this, item.getName(), item.getPosition(), item.getDetails()));
     }
 
-    public class MapListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+    public static class MapListAdapter<T extends MapListItem> extends BaseAdapter implements AdapterView.OnItemClickListener {
+        private List<T> items = Collections.emptyList();
+        private Location mLastLocation;
+        private MapListActivity<T>  mActivity;
+
+        public MapListAdapter(@NonNull MapListActivity<T> activity) {
+            mActivity = activity;
+        }
+
+        public void setItems(@NonNull List<T> items) {
+            this.items = items;
+            notifyDataSetChanged();
+        }
+
+        public void setLastLocation(Location lastLocation) {
+            mLastLocation = lastLocation;
+            notifyDataSetChanged();
+        }
 
         @Override
         public int getCount() {
@@ -197,7 +216,7 @@ public abstract class MapListActivity<T extends MapListActivity.MapListItem> ext
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.direction_row, parent, false);
+                convertView = mActivity.getLayoutInflater().inflate(R.layout.direction_row, parent, false);
             }
 
             ((TextView) convertView.findViewById(android.R.id.text1)).setText(getItem(position).getName());
@@ -220,21 +239,21 @@ public abstract class MapListActivity<T extends MapListActivity.MapListItem> ext
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            showDetail(getItem(position));
+            mActivity.showDetail(getItem(position));
         }
     }
 
-    public MapListAdapter getAdapter() {
+    public MapListAdapter<T> getAdapter() {
         if (mAdapter == null) {
-            mAdapter = new MapListAdapter();
+            mAdapter = new MapListAdapter<>(this);
         }
         return mAdapter;
     }
 
-    public class MapListFragment extends ListFragment {
-        MapListAdapter mAdapter;
+    public static class MapListFragment<T extends MapListItem> extends ListFragment {
+        MapListAdapter<T> mAdapter;
 
-        public void setAdapter(MapListAdapter adapter) {
+        public void setAdapter(MapListAdapter<T> adapter) {
             mAdapter = adapter;
             setListAdapter(adapter);
         }
@@ -263,8 +282,8 @@ public abstract class MapListActivity<T extends MapListActivity.MapListItem> ext
                 mMapFragment.setOnMapReadyListener(MapListActivity.this);
                 fragment = mMapFragment;
             } else if (position == 1) {
-                mListFragment = new MapListFragment();
-                MapListAdapter adapter = getAdapter();
+                mListFragment = new MapListFragment<>();
+                MapListAdapter<T> adapter = getAdapter();
                 if (adapter != null) {
                     mListFragment.setAdapter(adapter);
                 }
