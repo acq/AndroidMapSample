@@ -11,6 +11,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -175,7 +176,7 @@ public class Arrondissement extends BaseModel implements MapListActivity.MapList
         Map<String, String> map = new HashMap<>();
         map.put("Official name", officialName);
         map.put("Insee number", String.valueOf(inseeNumber));
-        map.put("Updated at", new SimpleDateFormat().format(updatedAt));
+        map.put("Updated at", DateFormat.getDateTimeInstance().format(updatedAt));
         map.put("Surface", String.valueOf(surface));
         return map;
     }
