@@ -5,12 +5,4 @@
         <attr name="ratio" format="float" />
     </declare-styleable>
 
-    <declare-styleable name="AutoResizingTextView">
-        <attr name="minTextSize" format="dimension" />
-        <attr name="customFont" format="string"/>
-
-        <attr name="android:minLines"/>
-        <attr name="android:maxLines"/>
-    </declare-styleable>
-
 </resources>
