@@ -36,8 +36,6 @@ public class ArrondissementsActivity extends MapListActivity<Arrondissement> {
             return;
         }
 
-//        GoogleMap map = ((NativeGoogleMapFragment) mMapFragment.getMapView().getMapInterface()).getGoogleMap();
-//        map.clear(); //TODO
         for (Arrondissement arrondissement : items) {
             try {
                 GeoJsonLayer layer = new GeoJsonLayer(mMapFragment.getMapView(), new JSONObject(arrondissement.getGeoJson()));

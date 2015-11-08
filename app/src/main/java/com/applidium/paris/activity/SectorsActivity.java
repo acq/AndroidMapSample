@@ -38,8 +38,6 @@ public class SectorsActivity extends MapListActivity<Sector> {
             return;
         }
 
-        GoogleMap map = ((NativeGoogleMapFragment) mMapFragment.getMapView().getMapInterface()).getGoogleMap();
-        map.clear(); //TODO
         for (Sector sector : items) {
             try {
                 GeoJsonLayer layer = new GeoJsonLayer(mMapFragment.getMapView(), new JSONObject(sector.getGeoJson()));
