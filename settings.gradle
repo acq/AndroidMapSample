@@ -1,1 +1,1 @@
-include ':app', ':external:airmapview'
+include ':app'
