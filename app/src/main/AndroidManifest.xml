@@ -85,13 +85,6 @@
                 android:value="com.applidium.paris.activity.MainActivity"/>
         </activity>
         <activity
-            android:name=".activity.EventsActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.applidium.paris.activity.MainActivity"/>
-        </activity>
-        <activity
             android:name=".activity.AddressesActivity"
             android:screenOrientation="portrait">
             <meta-data
