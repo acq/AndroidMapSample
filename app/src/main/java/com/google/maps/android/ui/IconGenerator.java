@@ -27,7 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.applidium.paris.R;
+import com.applidium.map_sample.R;
 
 /**
  * IconGenerator generates icons that contain text (or custom content) within an info

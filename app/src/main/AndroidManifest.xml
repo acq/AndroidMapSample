@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="com.applidium.paris"
+    package="com.applidium.map_sample"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -9,13 +9,13 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
-        android:name=".App"
+        android:name="com.applidium.map_sample.App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.MainActivity"
+            android:name="com.applidium.map_sample.activity.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -25,71 +25,71 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.MuseumsActivity"
+            android:name="com.applidium.map_sample.activity.MuseumsActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.applidium.paris.activity.MainActivity"/>
+                android:value="com.applidium.map_sample.activity.MainActivity"/>
         </activity>
         <activity
-            android:name=".activity.DetailActivity"
+            android:name="com.applidium.map_sample.activity.DetailActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".activity.SectorsActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.applidium.paris.activity.MainActivity"/>
-        </activity>
-        <activity
-            android:name=".activity.PublicToiletsActivity"
+            android:name="com.applidium.map_sample.activity.SectorsActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.applidium.paris.activity.MainActivity"/>
+                android:value="com.applidium.map_sample.activity.MainActivity"/>
         </activity>
         <activity
-            android:name=".activity.TheatersActivity"
+            android:name="com.applidium.map_sample.activity.PublicToiletsActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.applidium.paris.activity.MainActivity"/>
+                android:value="com.applidium.map_sample.activity.MainActivity"/>
         </activity>
         <activity
-            android:name=".activity.SchoolsActivity"
+            android:name="com.applidium.map_sample.activity.TheatersActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.applidium.paris.activity.MainActivity"/>
+                android:value="com.applidium.map_sample.activity.MainActivity"/>
         </activity>
         <activity
-            android:name=".activity.ArrondissementsActivity"
+            android:name="com.applidium.map_sample.activity.SchoolsActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.applidium.paris.activity.MainActivity"/>
+                android:value="com.applidium.map_sample.activity.MainActivity"/>
         </activity>
         <activity
-            android:name=".activity.FoursquareActivity"
+            android:name="com.applidium.map_sample.activity.ArrondissementsActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.applidium.paris.activity.MainActivity"/>
+                android:value="com.applidium.map_sample.activity.MainActivity"/>
         </activity>
         <activity
-            android:name=".activity.YelpActivity"
+            android:name="com.applidium.map_sample.activity.FoursquareActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.applidium.paris.activity.MainActivity"/>
+                android:value="com.applidium.map_sample.activity.MainActivity"/>
         </activity>
         <activity
-            android:name=".activity.AddressesActivity"
+            android:name="com.applidium.map_sample.activity.YelpActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.applidium.paris.activity.MainActivity"/>
+                android:value="com.applidium.map_sample.activity.MainActivity"/>
+        </activity>
+        <activity
+            android:name="com.applidium.map_sample.activity.AddressesActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.applidium.map_sample.activity.MainActivity"/>
         </activity>
 
         <meta-data

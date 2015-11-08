@@ -14,7 +14,7 @@ import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.List;
 
-import com.applidium.paris.DebugApplication;
+import com.applidium.map_sample.DebugApplication;
 
 public class SQLDumpPlugin implements DumperPlugin {
 

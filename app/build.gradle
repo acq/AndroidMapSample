@@ -25,7 +25,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.applidium.paris"
+        applicationId "com.applidium.map_sample"
         versionCode 1
         versionName "0.1"
         minSdkVersion 14
@@ -47,17 +47,17 @@ android {
 
     productFlavors {
         stubs {
-            applicationId "com.applidium.paris.stubs"
+            applicationId "com.applidium.map_sample.stubs"
             versionName = android.defaultConfig.versionName + "-stubs"
         }
 
         preprod {
-            applicationId "com.applidium.paris.preprod"
+            applicationId "com.applidium.map_sample.preprod"
             versionName = android.defaultConfig.versionName + "-preprod"
         }
 
         prod {
-            applicationId "com.applidium.paris.prod"
+            applicationId "com.applidium.map_sample.prod"
             versionName = android.defaultConfig.versionName + "-prod"
         }
 
