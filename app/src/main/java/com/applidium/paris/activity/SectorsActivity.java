@@ -6,12 +6,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import com.airbnb.android.airmapview.AirMapMarker;
+import com.airbnb.android.airmapview.geojson.GeoJsonLayer;
 import com.airbnb.android.airmapview.listeners.OnMapClickListener;
 import com.applidium.paris.model.Sector;
 import com.applidium.paris.db.SectorRepository;
 import com.applidium.paris.util.ColorUtil;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.geojson.GeoJsonLayer;
 
 import org.json.JSONException;
 import org.json.JSONObject;

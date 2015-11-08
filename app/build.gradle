@@ -14,10 +14,10 @@ dependencies {
     compile "com.raizlabs.android:DBFlow:2.2.1"
     compile 'com.jakewharton.timber:timber:3.0.1'
     debugCompile 'com.facebook.stetho:stetho:1.1.1'
-    compile project(':external:airmapview')
     compile 'com.android.support:design:23.1.0'
     compile 'com.google.android.gms:play-services-location:8.1.0'
     compile 'se.akerfeldt:okhttp-signpost:1.0.0'
+    compile 'com.github.acq:AirMapView:4758731da'
 }
 
 android {
